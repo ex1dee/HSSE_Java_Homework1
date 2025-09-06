@@ -1,0 +1,15 @@
+name: Some CI job
+
+on:
+  push:
+    branches: [*]
+  pull_request:
+    branches: [*]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print date and time to console
+        run: |
+          echo "current date = $(date)"
