@@ -1,6 +1,6 @@
 package com.mipt.rezchikovsergey.generics;
 
-public class Calculator <T extends Number> {
+public class Calculator<T extends Number> {
   public double sum(T a, T b) {
     return toDouble(a) + toDouble(b);
   }

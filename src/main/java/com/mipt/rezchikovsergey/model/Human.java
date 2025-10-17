@@ -1,40 +1,40 @@
 package com.mipt.rezchikovsergey.model;
 
 public class Human {
-    private String firstName;
-    private String lastName;
-    private boolean isEmployed;
-    private int age;
+  private String firstName;
+  private String lastName;
+  private boolean isEmployed;
+  private int age;
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setEmployed(boolean employed) {
-        isEmployed = employed;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public boolean isEmployed() {
+    return isEmployed;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setEmployed(boolean employed) {
+    isEmployed = employed;
+  }
 
-    public boolean isEmployed() {
-        return isEmployed;
-    }
+  public int getAge() {
+    return age;
+  }
 
-    public int getAge() {
-        return age;
-    }
+  public void setAge(int age) {
+    this.age = age;
+  }
 }
