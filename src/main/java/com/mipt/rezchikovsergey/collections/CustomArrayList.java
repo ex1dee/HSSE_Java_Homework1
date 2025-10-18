@@ -36,6 +36,7 @@ public class CustomArrayList<A> implements CustomList<A> {
    * If size is equal to capacity array expands
    *
    * @param element the element that will be added to the list
+   * @throws NullPointerException if the element is null
    */
   @Override
   public void add(A element) {

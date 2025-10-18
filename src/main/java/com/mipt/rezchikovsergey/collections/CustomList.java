@@ -19,6 +19,7 @@ public interface CustomList<A> extends Iterable<A> {
    * Adds the specified element to the end of the list
    *
    * @param element element that will be added to the list
+   * @throws NullPointerException if the element is null
    */
   void add(A element);
 
