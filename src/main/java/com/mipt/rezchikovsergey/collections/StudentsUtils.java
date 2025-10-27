@@ -3,7 +3,8 @@ package com.mipt.rezchikovsergey.collections;
 import java.util.*;
 
 public class StudentsUtils {
-  public static List<Student> findStudentsByGradeRange(Map<Integer, Student> map, double minGrade, double maxGrade) {
+  public static List<Student> findStudentsByGradeRange(
+      Map<Integer, Student> map, double minGrade, double maxGrade) {
     List<Student> students = new ArrayList<>();
 
     for (Map.Entry<Integer, Student> studentEntry : map.entrySet()) {
@@ -21,8 +22,7 @@ public class StudentsUtils {
     List<Student> students = new ArrayList<>();
 
     for (Map.Entry<Integer, Student> studentEntry : map.reversed().entrySet()) {
-      if (students.size() == n)
-        break;
+      if (students.size() == n) break;
 
       students.add(studentEntry.getValue());
     }
