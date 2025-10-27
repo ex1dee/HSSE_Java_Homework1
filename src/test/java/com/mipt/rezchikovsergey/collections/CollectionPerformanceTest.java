@@ -1,8 +1,7 @@
 package com.mipt.rezchikovsergey.collections;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.*;
+import org.junit.jupiter.api.Test;
 
 @FunctionalInterface
 interface ListOperation {

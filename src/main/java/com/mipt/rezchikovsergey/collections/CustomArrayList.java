@@ -7,7 +7,6 @@ import java.util.*;
  *
  * @param <A> the type of element in the list
  */
-
 public class CustomArrayList<A> implements CustomList<A> {
   private final float EXPANSION_COEFFICIENT = 1.5f;
   private final int DEFAULT_CAPACITY = 8;
@@ -32,8 +31,7 @@ public class CustomArrayList<A> implements CustomList<A> {
   }
 
   /**
-   * Adds the specified element to the end of the list
-   * If size is equal to capacity array expands
+   * Adds the specified element to the end of the list If size is equal to capacity array expands
    *
    * @param element the element that will be added to the list
    * @throws NullPointerException if the element is null
@@ -50,8 +48,7 @@ public class CustomArrayList<A> implements CustomList<A> {
   }
 
   /**
-   * Removes element with specified index from the list
-   * Shifts all subsequent elements to the left
+   * Removes element with specified index from the list Shifts all subsequent elements to the left
    *
    * @param index the index of an element to be removed
    */
@@ -103,7 +100,6 @@ public class CustomArrayList<A> implements CustomList<A> {
    *
    * @return the current capacity of the list
    */
-
   public int capacity() {
     return capacity;
   }
