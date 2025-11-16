@@ -24,14 +24,21 @@ public class CachingDecorator extends DataServiceDecorator {
 
   @Override
   public void saveData(String key, String data) {
+    if (cache.containsKey(key) && cache.get(key).equals(data))
+      return;
+
     cache.put(key, data);
     decoratedComponent.saveData(key, data);
   }
 
   @Override
   public boolean deleteData(String key) {
-    cache.remove(key);
+    if (cache.containsKey(key)) {
+      cache.remove(key);
 
-    return decoratedComponent.deleteData(key);
+      return decoratedComponent.deleteData(key);
+    }
+
+    return false;
   }
 }
