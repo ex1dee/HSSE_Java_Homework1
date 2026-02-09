@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.model;
+package com.mipt.rezchikovsergey.sem1.model;
 
 public class Human {
   private String firstName;

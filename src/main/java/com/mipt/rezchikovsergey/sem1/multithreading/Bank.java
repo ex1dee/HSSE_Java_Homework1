@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.multithreading;
+package com.mipt.rezchikovsergey.sem1.multithreading;
 
 public class Bank {
   public void sendToAccount(BankAccount source, BankAccount destination, int money) {

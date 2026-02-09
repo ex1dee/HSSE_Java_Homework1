@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.annotations_reflections;
+package com.mipt.rezchikovsergey.sem1.annotations_reflections;
 
 import java.util.ArrayList;
 import java.util.List;

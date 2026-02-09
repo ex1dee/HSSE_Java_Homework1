@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.annotations_reflections.annotations;
+package com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

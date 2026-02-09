@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.model;
+package com.mipt.rezchikovsergey.sem1.model;
 
 public abstract class Employee {
   public abstract void work(int anyInt);

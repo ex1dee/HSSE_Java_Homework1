@@ -8,12 +8,6 @@ public class MetricableDecorator extends DataServiceDecorator {
     super(decoratedComponent);
   }
 
-  public static class MetricService {
-    public void sendMetric(Duration duration) {
-      System.out.println("Метод выполнялся: " + duration.toString());
-    }
-  }
-
   @Override
   public Optional<String> findDataByKey(String key) {
     long startNanoTime = System.nanoTime();
@@ -43,5 +37,11 @@ public class MetricableDecorator extends DataServiceDecorator {
     new MetricService().sendMetric(Duration.ofNanos(endNanoTime - startNanoTime));
 
     return result;
+  }
+
+  public static class MetricService {
+    public void sendMetric(Duration duration) {
+      System.out.println("Метод выполнялся: " + duration.toString());
+    }
   }
 }

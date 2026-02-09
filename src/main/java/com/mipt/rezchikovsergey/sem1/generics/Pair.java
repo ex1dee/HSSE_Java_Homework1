@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.generics;
+package com.mipt.rezchikovsergey.sem1.generics;
 
 public class Pair<K, V> {
   private K key;

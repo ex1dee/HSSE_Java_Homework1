@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.generics;
+package com.mipt.rezchikovsergey.sem1.generics;
 
 public class ArrayUtils {
   public static <T> int findFirst(T[] array, T element) {

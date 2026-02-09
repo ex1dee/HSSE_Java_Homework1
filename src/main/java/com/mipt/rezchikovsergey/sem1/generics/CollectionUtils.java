@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.generics;
+package com.mipt.rezchikovsergey.sem1.generics;
 
 import java.util.ArrayList;
 import java.util.List;

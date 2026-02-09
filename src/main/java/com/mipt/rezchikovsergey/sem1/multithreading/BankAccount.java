@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.multithreading;
+package com.mipt.rezchikovsergey.sem1.multithreading;
 
 import java.util.UUID;
 

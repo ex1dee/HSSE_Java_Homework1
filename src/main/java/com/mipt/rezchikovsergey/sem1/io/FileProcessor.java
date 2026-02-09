@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.io;
+package com.mipt.rezchikovsergey.sem1.io;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,7 +67,8 @@ public class FileProcessor {
 
   private static List<Path> getSortedParts(List<Path> partPaths) {
     return partPaths.stream()
-            .sorted((p1, p2) -> {
+        .sorted(
+            (p1, p2) -> {
               int part1;
               int part2;
 
@@ -80,11 +81,12 @@ public class FileProcessor {
 
               return Integer.compare(part1, part2);
             })
-            .toList();
+        .toList();
   }
 
   private static int extractPartNumber(Path path) throws IllegalArgumentException {
-    if (!path.toString().matches(".*\\.part\\d+")) throw new IllegalArgumentException("Invalid file part path: " + path);
+    if (!path.toString().matches(".*\\.part\\d+"))
+      throw new IllegalArgumentException("Invalid file part path: " + path);
 
     String[] pathParts = path.toString().split("part");
     return Integer.parseInt(pathParts[pathParts.length - 1]);

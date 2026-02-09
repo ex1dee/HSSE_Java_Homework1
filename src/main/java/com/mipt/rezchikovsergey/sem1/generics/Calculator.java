@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.generics;
+package com.mipt.rezchikovsergey.sem1.generics;
 
 public class Calculator<T extends Number> {
   public double sum(T a, T b) {

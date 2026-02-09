@@ -1,10 +1,9 @@
-package com.mipt.rezchikovsergey.annotations_reflections;
+package com.mipt.rezchikovsergey.sem1.annotations_reflections;
 
-import com.mipt.rezchikovsergey.annotations_reflections.annotations.Email;
-import com.mipt.rezchikovsergey.annotations_reflections.annotations.NotNull;
-import com.mipt.rezchikovsergey.annotations_reflections.annotations.Range;
-import com.mipt.rezchikovsergey.annotations_reflections.annotations.Size;
-
+import com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations.Email;
+import com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations.NotNull;
+import com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations.Range;
+import com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations.Size;
 import java.lang.reflect.Field;
 
 public class Validator {
@@ -51,10 +50,10 @@ public class Validator {
 
       if (size > annotation.max() || size < annotation.min()) {
         validationResult.addError(
-                annotation
-                        .message()
-                        .replace("{min}", String.valueOf(annotation.min()))
-                        .replace("{max}", String.valueOf(annotation.max())));
+            annotation
+                .message()
+                .replace("{min}", String.valueOf(annotation.min()))
+                .replace("{max}", String.valueOf(annotation.max())));
       }
     }
   }
@@ -68,10 +67,10 @@ public class Validator {
 
       if (number > annotation.max() || number < annotation.min()) {
         validationResult.addError(
-                annotation
-                        .message()
-                        .replace("{min}", String.valueOf(annotation.min()))
-                        .replace("{max}", String.valueOf(annotation.max())));
+            annotation
+                .message()
+                .replace("{min}", String.valueOf(annotation.min()))
+                .replace("{max}", String.valueOf(annotation.max())));
       }
     }
   }
@@ -91,7 +90,7 @@ public class Validator {
     try {
       return field.get(object);
     } catch (IllegalAccessException e) {
-      throw new ValidationException (
+      throw new ValidationException(
           "Cannot access field " + field.getName() + " of " + object.getClass().getName(), e);
     }
   }

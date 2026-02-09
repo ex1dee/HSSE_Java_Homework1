@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.collections;
+package com.mipt.rezchikovsergey.sem1.collections;
 
 import java.util.*;
 

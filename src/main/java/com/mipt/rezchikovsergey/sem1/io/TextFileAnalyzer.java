@@ -1,24 +1,10 @@
-package com.mipt.rezchikovsergey.io;
+package com.mipt.rezchikovsergey.sem1.io;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TextFileAnalyzer {
-  public record AnalysisResult(long lineCount, long wordCount, long charCount) {
-    @Override
-    public String toString() {
-      return "AnalysisResult{"
-          + "lineCount="
-          + lineCount
-          + ", wordCount="
-          + wordCount
-          + ", charCount="
-          + charCount
-          + '}';
-    }
-  }
-
   public static AnalysisResult analyzeFile(String filePathStr) throws IOException {
     Path filePath = Path.of(filePathStr);
 
@@ -50,6 +36,20 @@ public class TextFileAnalyzer {
       throws IOException {
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPathStr))) {
       writer.write(result.toString());
+    }
+  }
+
+  public record AnalysisResult(long lineCount, long wordCount, long charCount) {
+    @Override
+    public String toString() {
+      return "AnalysisResult{"
+          + "lineCount="
+          + lineCount
+          + ", wordCount="
+          + wordCount
+          + ", charCount="
+          + charCount
+          + '}';
     }
   }
 }
