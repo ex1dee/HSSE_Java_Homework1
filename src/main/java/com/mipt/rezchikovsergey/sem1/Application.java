@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem1.sem1;
+package com.mipt.rezchikovsergey.sem1;
 
 public class Application {
   protected static double someDoubleVarWithoutInitialization;
