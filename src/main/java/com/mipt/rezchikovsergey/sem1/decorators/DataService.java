@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.patterns.decorators;
+package com.mipt.rezchikovsergey.sem1.decorators;
 
 import java.util.Optional;
 

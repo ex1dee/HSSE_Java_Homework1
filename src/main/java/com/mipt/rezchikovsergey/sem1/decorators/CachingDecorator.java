@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.patterns.decorators;
+package com.mipt.rezchikovsergey.sem1.decorators;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,7 @@ public class CachingDecorator extends DataServiceDecorator {
 
   @Override
   public Optional<String> findDataByKey(String key) {
-    if (cache.containsKey(key))
-      return Optional.of(cache.get(key));
+    if (cache.containsKey(key)) return Optional.of(cache.get(key));
 
     Optional<String> result = decoratedComponent.findDataByKey(key);
     result.ifPresent(data -> cache.put(key, data));
@@ -24,8 +23,7 @@ public class CachingDecorator extends DataServiceDecorator {
 
   @Override
   public void saveData(String key, String data) {
-    if (cache.containsKey(key) && cache.get(key).equals(data))
-      return;
+    if (cache.containsKey(key) && cache.get(key).equals(data)) return;
 
     cache.put(key, data);
     decoratedComponent.saveData(key, data);

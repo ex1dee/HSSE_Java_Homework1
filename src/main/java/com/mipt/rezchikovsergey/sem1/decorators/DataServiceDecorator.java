@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.patterns.decorators;
+package com.mipt.rezchikovsergey.sem1.decorators;
 
 public abstract class DataServiceDecorator implements DataService {
   DataService decoratedComponent;
