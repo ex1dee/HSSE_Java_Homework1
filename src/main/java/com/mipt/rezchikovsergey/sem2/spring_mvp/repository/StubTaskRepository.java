@@ -1,6 +1,7 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.Task;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Repository;
@@ -10,10 +11,7 @@ public class StubTaskRepository implements TaskRepository {
   private final Task stubTask;
 
   public StubTaskRepository() {
-    stubTask = new Task();
-    stubTask.setTitle("Stub Task");
-    stubTask.setDescription("amamamam");
-    stubTask.setCompleted(true);
+    stubTask = new Task(UUID.randomUUID(), "Stub Task", "amamamam", true);
   }
 
   @Override
@@ -22,10 +20,14 @@ public class StubTaskRepository implements TaskRepository {
   }
 
   @Override
-  public Optional<Task> findById(UUID id) {
-    stubTask.setId(id);
+  public List<Task> findAll() {
+    return List.of(stubTask);
+  }
 
-    return Optional.of(stubTask);
+  @Override
+  public Optional<Task> findById(UUID id) {
+    return Optional.of(
+        new Task(id, stubTask.getTitle(), stubTask.getDescription(), stubTask.isCompleted()));
   }
 
   @Override

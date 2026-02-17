@@ -8,6 +8,13 @@ public class Task {
   private String description;
   private boolean completed;
 
+  public Task(UUID id, String title, String description, boolean completed) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.completed = completed;
+  }
+
   @Override
   public String toString() {
     return "Task{"
