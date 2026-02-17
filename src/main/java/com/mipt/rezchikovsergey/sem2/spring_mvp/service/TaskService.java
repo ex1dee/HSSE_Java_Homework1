@@ -22,7 +22,7 @@ public class TaskService {
 
   private final Map<UUID, Task> taskCache = new HashMap<>();
 
-  private TaskService(TaskRepository taskRepository) {
+  public TaskService(TaskRepository taskRepository) {
     this.taskRepository = taskRepository;
   }
 
