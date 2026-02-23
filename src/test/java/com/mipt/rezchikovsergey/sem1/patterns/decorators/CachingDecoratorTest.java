@@ -3,6 +3,9 @@ package com.mipt.rezchikovsergey.sem1.patterns.decorators;
 import static com.mipt.rezchikovsergey.sem1.patterns.decorators.DecoratorsTestUtils.createMockDataService;
 import static org.mockito.Mockito.*;
 
+import com.mipt.rezchikovsergey.sem1.decorators.CachingDecorator;
+import com.mipt.rezchikovsergey.sem1.decorators.DataService;
+import com.mipt.rezchikovsergey.sem1.decorators.LoggingDecorator;
 import org.junit.jupiter.api.Test;
 
 class CachingDecoratorTest {

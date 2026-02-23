@@ -2,7 +2,6 @@ package com.mipt.rezchikovsergey.sem1.annotations_reflections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mipt.rezchikovsergey.annotations_reflections.test_classes.*;
 import com.mipt.rezchikovsergey.sem1.annotations_reflections.test_classes.EmailString;
 import com.mipt.rezchikovsergey.sem1.annotations_reflections.test_classes.FullInvalidAnnotated;
 import com.mipt.rezchikovsergey.sem1.annotations_reflections.test_classes.FullValidAnnotated;

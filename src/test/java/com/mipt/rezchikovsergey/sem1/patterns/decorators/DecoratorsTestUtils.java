@@ -3,6 +3,7 @@ package com.mipt.rezchikovsergey.sem1.patterns.decorators;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import com.mipt.rezchikovsergey.sem1.decorators.DataService;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Optional;

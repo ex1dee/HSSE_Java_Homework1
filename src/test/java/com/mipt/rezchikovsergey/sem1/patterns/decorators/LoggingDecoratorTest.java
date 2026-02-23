@@ -5,6 +5,8 @@ import static com.mipt.rezchikovsergey.sem1.patterns.decorators.DecoratorsTestUt
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+import com.mipt.rezchikovsergey.sem1.decorators.DataService;
+import com.mipt.rezchikovsergey.sem1.decorators.LoggingDecorator;
 import org.junit.jupiter.api.Test;
 
 class LoggingDecoratorTest {

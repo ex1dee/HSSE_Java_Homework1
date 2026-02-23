@@ -3,6 +3,8 @@ package com.mipt.rezchikovsergey.sem1.patterns.decorators;
 import static com.mipt.rezchikovsergey.sem1.patterns.decorators.DecoratorsTestUtils.createMockDataService;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.mipt.rezchikovsergey.sem1.decorators.DataService;
+import com.mipt.rezchikovsergey.sem1.decorators.ValidationDecorator;
 import org.junit.jupiter.api.Test;
 
 public class ValidationDecoratorTest {

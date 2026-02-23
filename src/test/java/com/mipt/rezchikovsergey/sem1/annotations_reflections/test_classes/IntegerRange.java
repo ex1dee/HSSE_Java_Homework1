@@ -1,6 +1,6 @@
 package com.mipt.rezchikovsergey.sem1.annotations_reflections.test_classes;
 
-import com.mipt.rezchikovsergey.annotations_reflections.annotations.Range;
+import com.mipt.rezchikovsergey.sem1.annotations_reflections.annotations.Range;
 
 public class IntegerRange {
   @Range(min = 3, max = 5)
