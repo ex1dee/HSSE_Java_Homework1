@@ -1,6 +1,10 @@
 server:
   port: 8081
 
+spring:
+  profiles:
+    active: dev
+
 app:
   name: "Task Manager"
   version: "1.0.0"
