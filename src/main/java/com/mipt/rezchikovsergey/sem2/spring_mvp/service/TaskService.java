@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -24,12 +25,20 @@ public class TaskService {
   private final Map<UUID, TaskEntity> taskCache = new HashMap<>();
   private final TaskRepository taskRepository;
 
+  @Value("${app.name}")
+  private String appName;
+
+  @Value("${app.version}")
+  private String appVersion;
+
   public TaskService(TaskRepository taskRepository) {
     this.taskRepository = taskRepository;
   }
 
   @PostConstruct
-  private void initCache() {
+  private void init() {
+    log.info("Starting {} v{}", appName, appVersion);
+
     taskRepository.findAll().forEach(task -> taskCache.put(task.getId(), task));
   }
 
