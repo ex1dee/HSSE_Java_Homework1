@@ -80,7 +80,7 @@ public class TaskControllerTest {
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getHeaders().getLocation());
     assertNotNull(response.getBody());
-    assertEquals(null, response.getBody().id());
+    assertEquals(id, response.getBody().id());
   }
 
   @Test
