@@ -78,7 +78,7 @@ class BankTest {
   private void testDeadlock(boolean shouldBeDeadlock, BankTransferFunction transferFunction)
       throws InterruptedException {
     final int MAX_AWAIT_TIME = 500;
-    final int ITERATIONS_NUM = 100;
+    final int ITERATIONS_NUM = 10000;
     final int THREADS_NUM = 10;
 
     AtomicInteger completedCounter = new AtomicInteger(0);
