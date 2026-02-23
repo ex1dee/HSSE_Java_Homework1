@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp.bpp;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.aspect;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;

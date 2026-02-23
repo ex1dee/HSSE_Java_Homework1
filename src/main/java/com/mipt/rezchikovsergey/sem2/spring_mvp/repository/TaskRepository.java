@@ -1,16 +1,16 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface TaskRepository {
-  void save(Task task);
+  void save(TaskEntity task);
 
-  List<Task> findAll();
+  List<TaskEntity> findAll();
 
-  Optional<Task> findById(UUID id);
+  Optional<TaskEntity> findById(UUID id);
 
   void removeById(UUID id);
 }

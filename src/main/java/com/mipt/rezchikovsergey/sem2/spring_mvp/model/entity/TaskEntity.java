@@ -1,14 +1,14 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity;
 
 import java.util.UUID;
 
-public class Task {
+public class TaskEntity {
   private UUID id;
   private String title;
   private String description;
   private boolean completed;
 
-  public Task(UUID id, String title, String description, boolean completed) {
+  public TaskEntity(UUID id, String title, String description, boolean completed) {
     this.id = id;
     this.title = title;
     this.description = description;
