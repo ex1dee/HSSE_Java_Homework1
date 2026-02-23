@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+/** Конфигурационный класс для настройки бинов приложения. */
 @Configuration
 public class ApplicationConfig {
   @Bean

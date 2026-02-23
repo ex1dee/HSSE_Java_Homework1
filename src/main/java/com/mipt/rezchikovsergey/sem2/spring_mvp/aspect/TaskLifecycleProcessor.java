@@ -8,6 +8,10 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Component;
 
+/**
+ * Процессор жизненного цикла бинов. Логирует этапы создания и инициализации бинов репозитория и
+ * сервиса.
+ */
 @Component
 public class TaskLifecycleProcessor implements BeanPostProcessor {
   private static final Logger log = LoggerFactory.getLogger(TaskLifecycleProcessor.class);

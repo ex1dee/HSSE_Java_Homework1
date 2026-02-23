@@ -4,7 +4,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.CreateTaskRequ
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.UpdateTaskRequest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.IDResponse;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.MessageResponse;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskEntity;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
 import java.net.URI;
 import java.util.List;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/** REST-контроллер для управления задачами. Предоставляет API для CRUD операций над задачами. */
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -30,12 +31,12 @@ public class TaskController {
   }
 
   @GetMapping
-  public List<TaskEntity> getAllTasks() {
+  public List<Task> getAllTasks() {
     return taskService.getAllTasks();
   }
 
   @GetMapping("/{id}")
-  public TaskEntity getTaskById(@PathVariable("id") UUID id) {
+  public Task getTaskById(@PathVariable("id") UUID id) {
     return taskService.getTaskById(id);
   }
 

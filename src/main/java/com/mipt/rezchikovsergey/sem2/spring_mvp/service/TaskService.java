@@ -3,7 +3,7 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.CreateTaskRequest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.UpdateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskEntity;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -17,12 +17,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+/**
+ * Сервис для управления бизнес-логикой задач. Осуществляет взаимодействие между контроллером и
+ * репозиториями, а также управляет кэшированием задач.
+ */
 @Service
 @Primary
 public class TaskService {
 
   private static final Logger log = LoggerFactory.getLogger(TaskService.class);
-  private final Map<UUID, TaskEntity> taskCache = new HashMap<>();
+  private final Map<UUID, Task> taskCache = new HashMap<>();
   private final TaskRepository taskRepository;
 
   @Value("${app.name}")
@@ -47,28 +51,28 @@ public class TaskService {
     log.info("Num of tasks in cache before destroying TaskService: {}", taskCache.size());
   }
 
-  public TaskEntity getTaskById(UUID id) {
-    TaskEntity task = taskCache.get(id);
+  public Task getTaskById(UUID id) {
+    Task task = taskCache.get(id);
     if (task != null) return task;
 
     return taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
   }
 
-  public List<TaskEntity> getAllTasks() {
+  public List<Task> getAllTasks() {
     return taskRepository.findAll();
   }
 
   public UUID createTask(CreateTaskRequest request) {
-    TaskEntity entity =
-        new TaskEntity(UUID.randomUUID(), request.title(), request.description(), false);
+    Task task = new Task(UUID.randomUUID(), request.title(), request.description(), false);
 
-    taskRepository.save(entity);
+    taskRepository.save(task);
+    taskCache.put(task.getId(), task);
 
-    return entity.getId();
+    return task.getId();
   }
 
   public void updateTask(UUID id, UpdateTaskRequest request) {
-    TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+    Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
     if (request.title() != null) {
       task.setTitle(request.title());
@@ -83,6 +87,7 @@ public class TaskService {
     }
 
     taskRepository.save(task);
+    taskCache.put(task.getId(), task);
   }
 
   public void removeTask(UUID id) {
