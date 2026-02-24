@@ -1,0 +1,6 @@
+logging:
+  level:
+    root: WARN
+
+app:
+  name: "Task Manager (PROD)"

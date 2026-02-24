@@ -7,10 +7,10 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 public class TaskService {
 
   private static final Logger log = LoggerFactory.getLogger(TaskService.class);
-  private final ConcurrentMap<UUID, Task> taskCache = new ConcurrentHashMap<>();
+  private final Map<UUID, Task> taskCache = new HashMap<>();
   private final TaskRepository taskRepository;
 
   @Value("${app.name}")
@@ -41,6 +41,8 @@ public class TaskService {
 
   @PostConstruct
   private void init() {
+    log.info("Starting {} v{}", appName, appVersion);
+
     taskRepository.findAll().forEach(task -> taskCache.put(task.getId(), task));
   }
 

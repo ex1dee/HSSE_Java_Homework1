@@ -4,13 +4,10 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Repository;
 
-/** Репозиторий-заглушка для работы с задачами. */
+@Repository
 public class StubTaskRepository implements TaskRepository {
-
-  private static final Logger log = LoggerFactory.getLogger(StubTaskRepository.class);
   private final Task stubTask;
 
   public StubTaskRepository() {
@@ -19,7 +16,7 @@ public class StubTaskRepository implements TaskRepository {
 
   @Override
   public void save(Task task) {
-    log.info("Task saved");
+    System.out.println("Task saved");
   }
 
   @Override
@@ -35,6 +32,6 @@ public class StubTaskRepository implements TaskRepository {
 
   @Override
   public void removeById(UUID id) {
-    log.info("Task removed");
+    System.out.println("Task removed");
   }
 }
