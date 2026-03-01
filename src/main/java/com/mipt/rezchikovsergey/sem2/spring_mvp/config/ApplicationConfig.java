@@ -4,14 +4,12 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.InMemoryTaskRepositor
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 
 /** Конфигурационный класс для настройки бинов приложения. */
 @Configuration
 public class ApplicationConfig {
   @Bean
-  @Primary
-  public TaskRepository taskRepository() {
+  public TaskRepository stubTaskRepository() {
     return new InMemoryTaskRepository();
   }
 }

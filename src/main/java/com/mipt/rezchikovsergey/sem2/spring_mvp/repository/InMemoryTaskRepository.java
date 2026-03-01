@@ -2,14 +2,18 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import jakarta.annotation.PostConstruct;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
+@Repository
+@Primary
 public class InMemoryTaskRepository implements TaskRepository {
-  private final Map<UUID, Task> tasks = new HashMap<>();
+  private final ConcurrentMap<UUID, Task> tasks = new ConcurrentHashMap<>();
 
   @PostConstruct
   public void initTasks() {
