@@ -20,6 +20,6 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Build with Maven
+      - name: Build and Run Tests
         run: |
           mvn -B clean verify
