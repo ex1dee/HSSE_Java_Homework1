@@ -9,6 +9,10 @@ app:
   name: "Task Manager"
   version: "1.0.0"
 
+  session:
+    attributes:
+      favorite-tasks: "favoriteTasksIds"
+
   storage:
     directories:
       task-attachments: "upload"

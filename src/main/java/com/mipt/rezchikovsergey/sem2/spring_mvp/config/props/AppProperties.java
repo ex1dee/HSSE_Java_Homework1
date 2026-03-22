@@ -4,7 +4,11 @@ import java.nio.file.Path;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
-public record AppProperties(String name, String version, Storage storage) {
+public record AppProperties(String name, String version, Session session, Storage storage) {
+  public record Session(Attributes attributes) {
+    public record Attributes(String favoriteTasks) {}
+  }
+
   public record Storage(Directories directories) {
     public record Directories(Path taskAttachments) {}
   }
