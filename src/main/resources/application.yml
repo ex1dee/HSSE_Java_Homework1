@@ -8,3 +8,7 @@ spring:
 app:
   name: "Task Manager"
   version: "1.0.0"
+
+  storage:
+    directories:
+      task-attachments: "upload"

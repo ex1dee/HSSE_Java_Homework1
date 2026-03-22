@@ -1,7 +1,7 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.BadDateException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.BadDateException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
@@ -54,13 +54,13 @@ public class TaskService {
     return taskRepository.findAll();
   }
 
-  public UUID createTask(TaskCreateDto request) {
+  public Task createTask(TaskCreateDto request) {
     Task task = taskMapper.toEntity(request);
 
     taskRepository.save(task);
     taskCache.put(task.getId(), task);
 
-    return task.getId();
+    return task;
   }
 
   public void updateTask(UUID id, TaskUpdateDto request) {

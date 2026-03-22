@@ -51,4 +51,9 @@ public class StubTaskRepository implements TaskRepository {
   public void removeById(UUID id) {
     log.info("Task removed");
   }
+
+  @Override
+  public boolean existsById(UUID id) {
+    return true;
+  }
 }

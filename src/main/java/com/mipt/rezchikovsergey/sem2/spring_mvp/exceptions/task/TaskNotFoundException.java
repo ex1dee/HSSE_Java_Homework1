@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.base.NotFoundException;
 import java.util.UUID;

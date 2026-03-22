@@ -6,6 +6,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.mapper.TaskMapper;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
 import java.net.URI;
 import java.util.List;
@@ -29,6 +30,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RequiredArgsConstructor
 public class TaskController {
   private final TaskService taskService;
+  private final TaskMapper taskMapper;
 
   @GetMapping
   public List<Task> getAllTasks() {
@@ -43,14 +45,15 @@ public class TaskController {
   @PostMapping
   public ResponseEntity<TaskResponseDto> createTask(
       @Validated(OnCreate.class) @RequestBody TaskCreateDto request) {
-    TaskResponseDto response = taskService.createTask(request);
+    Task task = taskService.createTask(request);
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
-            .buildAndExpand(response.id())
+            .buildAndExpand(task.getId())
             .toUri();
 
-    return ResponseEntity.created(location).body(response);
+    TaskResponseDto responseDto = taskMapper.toResponseDto(task);
+    return ResponseEntity.created(location).body(responseDto);
   }
 
   @PutMapping("/{id}")

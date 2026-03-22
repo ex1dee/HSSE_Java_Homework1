@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public abstract class InMemoryRepository<T extends BaseEntity> implements CrudRepository<T> {
-  private final ConcurrentMap<UUID, T> data = new ConcurrentHashMap<>();
+  protected final ConcurrentMap<UUID, T> data = new ConcurrentHashMap<>();
 
   @Override
   public void save(T entity) {
@@ -36,5 +36,10 @@ public abstract class InMemoryRepository<T extends BaseEntity> implements CrudRe
   @Override
   public void removeById(UUID id) {
     data.remove(id);
+  }
+
+  @Override
+  public boolean existsById(UUID id) {
+    return data.containsKey(id);
   }
 }

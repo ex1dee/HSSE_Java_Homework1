@@ -5,7 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
+import lombok.Builder;
 
+@Builder
 public record TaskResponseDto(
     UUID id,
     String title,

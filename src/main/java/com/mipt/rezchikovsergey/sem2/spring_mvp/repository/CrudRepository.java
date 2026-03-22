@@ -13,4 +13,6 @@ public interface CrudRepository<T extends BaseEntity> {
   Optional<T> findById(UUID id);
 
   void removeById(UUID id);
+
+  boolean existsById(UUID id);
 }
