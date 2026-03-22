@@ -1,9 +1,9 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.CreateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.UpdateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.IDResponse;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.MessageResponse;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.IDResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.MessageResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
 import java.net.URI;
@@ -41,26 +41,26 @@ public class TaskController {
   }
 
   @PostMapping
-  public ResponseEntity<IDResponse> createTask(@RequestBody CreateTaskRequest request) {
+  public ResponseEntity<IDResponseDto> createTask(@RequestBody TaskCreateDto request) {
     UUID id = taskService.createTask(request);
     URI location =
         ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
 
-    return ResponseEntity.created(location).body(new IDResponse(id));
+    return ResponseEntity.created(location).body(new IDResponseDto(id));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<MessageResponse> updateTask(
-      @PathVariable("id") UUID id, @RequestBody UpdateTaskRequest request) {
+  public ResponseEntity<MessageResponseDto> updateTask(
+      @PathVariable("id") UUID id, @RequestBody TaskUpdateDto request) {
     taskService.updateTask(id, request);
 
-    return ResponseEntity.ok(new MessageResponse("Task was successfully updated"));
+    return ResponseEntity.ok(new MessageResponseDto("Task was successfully updated"));
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<MessageResponse> removeTask(@PathVariable("id") UUID id) {
+  public ResponseEntity<MessageResponseDto> removeTask(@PathVariable("id") UUID id) {
     taskService.removeTask(id);
 
-    return ResponseEntity.ok(new MessageResponse("Task was successfully removed"));
+    return ResponseEntity.ok(new MessageResponseDto("Task was successfully removed"));
   }
 }

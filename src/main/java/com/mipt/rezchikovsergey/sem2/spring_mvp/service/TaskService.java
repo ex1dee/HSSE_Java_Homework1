@@ -1,8 +1,8 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.CreateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.UpdateTaskRequest;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
@@ -62,7 +62,7 @@ public class TaskService {
     return taskRepository.findAll();
   }
 
-  public UUID createTask(CreateTaskRequest request) {
+  public UUID createTask(TaskCreateDto request) {
     Task task = new Task(UUID.randomUUID(), request.title(), request.description(), false);
 
     taskRepository.save(task);
@@ -71,7 +71,7 @@ public class TaskService {
     return task.getId();
   }
 
-  public void updateTask(UUID id, UpdateTaskRequest request) {
+  public void updateTask(UUID id, TaskUpdateDto request) {
     Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
     if (request.title() != null) {
