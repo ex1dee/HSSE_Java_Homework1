@@ -1,7 +1,8 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.repository.impl;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;

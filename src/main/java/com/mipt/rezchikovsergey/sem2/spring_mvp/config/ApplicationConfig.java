@@ -1,7 +1,7 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.config;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.StubTaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.impl.StubTaskRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

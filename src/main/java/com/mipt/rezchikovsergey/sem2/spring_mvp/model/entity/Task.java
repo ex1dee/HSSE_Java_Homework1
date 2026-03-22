@@ -4,19 +4,20 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /** Сущность, представляющая задачу. */
 @Data
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
-  private UUID id;
+public class Task extends BaseEntity {
   private String title;
   private String description;
   private LocalDate dueDate;
