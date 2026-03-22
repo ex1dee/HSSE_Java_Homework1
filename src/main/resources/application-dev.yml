@@ -1,0 +1,6 @@
+logging:
+  level:
+    root: DEBUG
+
+app:
+  name: "Task Manager (DEV)"

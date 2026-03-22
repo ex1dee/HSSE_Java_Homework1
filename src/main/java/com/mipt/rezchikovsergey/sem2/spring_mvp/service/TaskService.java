@@ -41,6 +41,8 @@ public class TaskService {
 
   @PostConstruct
   private void init() {
+    log.info("Starting {} v{}", appName, appVersion);
+
     taskRepository.findAll().forEach(task -> taskCache.put(task.getId(), task));
   }
 
