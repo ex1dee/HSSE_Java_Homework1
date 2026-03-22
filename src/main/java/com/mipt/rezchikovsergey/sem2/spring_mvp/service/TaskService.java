@@ -1,5 +1,6 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 
+import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.BadDateException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
@@ -9,9 +10,9 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Service;
 public class TaskService {
 
   private static final Logger log = LoggerFactory.getLogger(TaskService.class);
-  private final ConcurrentMap<UUID, Task> taskCache = new ConcurrentHashMap<>();
+  private final Map<UUID, Task> taskCache = new ConcurrentHashMap<>();
   private final TaskRepository taskRepository;
   private final TaskMapper taskMapper;
 
@@ -64,6 +65,11 @@ public class TaskService {
 
   public void updateTask(UUID id, TaskUpdateDto request) {
     Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
+
+    if (request.dueDate() != null
+        && request.dueDate().isBefore(task.getCreatedAt().toLocalDate())) {
+      throw new BadDateException();
+    }
 
     taskMapper.updateEntity(request, task);
     taskRepository.save(task);
