@@ -4,12 +4,13 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.groups.OnCreate;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.groups.OnUpdate;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.IDResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,12 +26,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 /** REST-контроллер для управления задачами. Предоставляет API для CRUD операций над задачами. */
 @RestController
 @RequestMapping("/api/tasks")
+@RequiredArgsConstructor
 public class TaskController {
   private final TaskService taskService;
-
-  public TaskController(TaskService taskService) {
-    this.taskService = taskService;
-  }
 
   @GetMapping
   public List<Task> getAllTasks() {
@@ -43,13 +41,16 @@ public class TaskController {
   }
 
   @PostMapping
-  public ResponseEntity<IDResponseDto> createTask(
+  public ResponseEntity<TaskResponseDto> createTask(
       @Validated(OnCreate.class) @RequestBody TaskCreateDto request) {
-    UUID id = taskService.createTask(request);
+    TaskResponseDto response = taskService.createTask(request);
     URI location =
-        ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(response.id())
+            .toUri();
 
-    return ResponseEntity.created(location).body(new IDResponseDto(id));
+    return ResponseEntity.created(location).body(response);
   }
 
   @PutMapping("/{id}")

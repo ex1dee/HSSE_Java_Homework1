@@ -2,6 +2,7 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
 import java.time.LocalDate;
@@ -12,7 +13,7 @@ import java.util.UUID;
 public class TaskFactory {
   public static final UUID DEFAULT_ID = UUID.randomUUID();
 
-  public static TaskCreateDto createDto() {
+  public static TaskCreateDto taskCreateDto() {
     return TaskCreateDto.builder()
         .title("Create Title")
         .description("Create Description")
@@ -22,13 +23,26 @@ public class TaskFactory {
         .build();
   }
 
-  public static TaskUpdateDto updateDto() {
+  public static TaskUpdateDto taskUpdateDto() {
     return TaskUpdateDto.builder()
         .title("Update Title")
         .description("Update Description")
         .dueDate(LocalDate.now().plusDays(3))
         .priority(TaskPriority.HIGH)
         .tags(Set.of("tag"))
+        .build();
+  }
+
+  public static TaskResponseDto taskResponseDto(UUID id, TaskCreateDto request) {
+    return TaskResponseDto.builder()
+        .id(id)
+        .title(request.title())
+        .description(request.description())
+        .createdAt(LocalDateTime.now())
+        .dueDate(LocalDate.now().plusDays(1))
+        .priority(request.priority())
+        .tags(request.tags())
+        .completed(false)
         .build();
   }
 
