@@ -13,6 +13,11 @@ app:
     attributes:
       favorite-tasks: "favoriteTasksIds"
 
+  cookie:
+    view-mode:
+      name: "viewPreference"
+      max-age: 604800 # 7 days
+
   storage:
     directories:
       task-attachments: "upload"
