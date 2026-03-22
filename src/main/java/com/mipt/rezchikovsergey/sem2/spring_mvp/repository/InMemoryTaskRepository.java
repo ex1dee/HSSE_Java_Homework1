@@ -1,9 +1,12 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
 import jakarta.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -17,11 +20,29 @@ public class InMemoryTaskRepository implements TaskRepository {
 
   @PostConstruct
   public void initTasks() {
-    UUID id1 = UUID.randomUUID();
-    tasks.put(id1, new Task(id1, "Some Task 1", "Some Description 1", false));
+    UUID firstId = UUID.randomUUID();
+    tasks.put(
+        firstId,
+        Task.builder()
+            .id(firstId)
+            .title("Some Task 1")
+            .description("Some Description 1")
+            .dueDate(LocalDate.now().plusDays(1))
+            .priority(TaskPriority.LOW)
+            .tags(Set.of("task1"))
+            .build());
 
-    UUID id2 = UUID.randomUUID();
-    tasks.put(id2, new Task(id2, "Some Task 2", "Some Description 2", false));
+    UUID secondId = UUID.randomUUID();
+    tasks.put(
+        secondId,
+        Task.builder()
+            .id(firstId)
+            .title("Some Task 2")
+            .description("Some Description 2")
+            .dueDate(LocalDate.now().plusDays(3))
+            .priority(TaskPriority.MEDIUM)
+            .tags(Set.of("task2"))
+            .build());
   }
 
   @Override

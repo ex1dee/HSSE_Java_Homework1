@@ -4,6 +4,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.mapper.TaskMapper;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
@@ -11,9 +12,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -23,26 +24,16 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Primary
+@RequiredArgsConstructor
 public class TaskService {
 
   private static final Logger log = LoggerFactory.getLogger(TaskService.class);
   private final ConcurrentMap<UUID, Task> taskCache = new ConcurrentHashMap<>();
   private final TaskRepository taskRepository;
-
-  @Value("${app.name}")
-  private String appName;
-
-  @Value("${app.version}")
-  private String appVersion;
-
-  public TaskService(TaskRepository taskRepository) {
-    this.taskRepository = taskRepository;
-  }
+  private final TaskMapper taskMapper;
 
   @PostConstruct
   private void init() {
-    log.info("Starting {} v{}", appName, appVersion);
-
     taskRepository.findAll().forEach(task -> taskCache.put(task.getId(), task));
   }
 
@@ -63,7 +54,7 @@ public class TaskService {
   }
 
   public UUID createTask(TaskCreateDto request) {
-    Task task = new Task(UUID.randomUUID(), request.title(), request.description(), false);
+    Task task = taskMapper.toEntity(request);
 
     taskRepository.save(task);
     taskCache.put(task.getId(), task);
@@ -74,18 +65,7 @@ public class TaskService {
   public void updateTask(UUID id, TaskUpdateDto request) {
     Task task = taskRepository.findById(id).orElseThrow(() -> new TaskNotFoundException(id));
 
-    if (request.title() != null) {
-      task.setTitle(request.title());
-    }
-
-    if (request.description() != null) {
-      task.setDescription(request.description());
-    }
-
-    if (request.completed() != null) {
-      task.setCompleted(request.completed());
-    }
-
+    taskMapper.updateEntity(request, task);
     taskRepository.save(task);
     taskCache.put(task.getId(), task);
   }

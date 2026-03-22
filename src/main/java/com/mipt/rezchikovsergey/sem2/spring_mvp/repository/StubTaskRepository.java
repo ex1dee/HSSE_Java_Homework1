@@ -1,8 +1,12 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +18,17 @@ public class StubTaskRepository implements TaskRepository {
   private final Task stubTask;
 
   public StubTaskRepository() {
-    stubTask = new Task(UUID.randomUUID(), "Stub Task", "amamamam", true);
+    stubTask =
+        Task.builder()
+            .id(UUID.randomUUID())
+            .title("Stub Task")
+            .description("amamamam")
+            .createdAt(LocalDateTime.now())
+            .dueDate(LocalDate.now().plusDays(1))
+            .priority(TaskPriority.LOW)
+            .tags(Set.of("work", "coding"))
+            .completed(false)
+            .build();
   }
 
   @Override
@@ -29,8 +43,7 @@ public class StubTaskRepository implements TaskRepository {
 
   @Override
   public Optional<Task> findById(UUID id) {
-    return Optional.of(
-        new Task(id, stubTask.getTitle(), stubTask.getDescription(), stubTask.isCompleted()));
+    return Optional.of(stubTask.toBuilder().id(id).build());
   }
 
   @Override
