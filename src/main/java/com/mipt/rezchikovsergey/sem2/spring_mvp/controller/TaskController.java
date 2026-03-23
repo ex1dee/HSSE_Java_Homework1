@@ -33,13 +33,19 @@ public class TaskController {
   private final TaskMapper taskMapper;
 
   @GetMapping
-  public List<Task> getAllTasks() {
-    return taskService.getAllTasks();
+  public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
+    List<Task> tasks = taskService.getAllTasks();
+    List<TaskResponseDto> responseDtos = tasks.stream().map(taskMapper::toResponseDto).toList();
+
+    return ResponseEntity.ok(responseDtos);
   }
 
   @GetMapping("/{id}")
-  public Task getTaskById(@PathVariable("id") UUID id) {
-    return taskService.getTaskById(id);
+  public ResponseEntity<TaskResponseDto> getTaskById(@PathVariable("id") UUID id) {
+    Task task = taskService.getTaskById(id);
+    TaskResponseDto responseDto = taskMapper.toResponseDto(task);
+
+    return ResponseEntity.ok(responseDto);
   }
 
   @PostMapping
