@@ -37,7 +37,9 @@ public class TaskController {
     List<Task> tasks = taskService.getAllTasks();
     List<TaskResponseDto> responseDtos = tasks.stream().map(taskMapper::toResponseDto).toList();
 
-    return ResponseEntity.ok(responseDtos);
+    return ResponseEntity.ok()
+        .header("X-Total-Count", String.valueOf(tasks.size()))
+        .body(responseDtos);
   }
 
   @GetMapping("/{id}")
