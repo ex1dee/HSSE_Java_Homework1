@@ -5,7 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(
-    String name, String version, Session session, Cookie cookie, Storage storage) {
+    String name, String version, Cors cors, Session session, Cookie cookie, Storage storage) {
+  public record Cors(String[] allowedOrigins, int maxAge) {}
+
   public record Session(Attributes attributes) {
     public record Attributes(String favoriteTasks) {}
   }
