@@ -31,7 +31,7 @@ public class PreferencesController {
           "Reads the UI display mode (compact/detailed) from the browser cookies. Defaults to 'detailed' if no cookie is present.")
   @ApiResponse(responseCode = "200", description = "Current view mode string")
   public ResponseEntity<String> getViewPreference(
-      @CookieValue(value = "${app.cookie.view-name}", defaultValue = VIEW_DETAILED_MODE)
+      @CookieValue(value = "${app.cookie.view-mode.name}", defaultValue = VIEW_DETAILED_MODE)
           String mode) {
     return ResponseEntity.ok(mode);
   }
