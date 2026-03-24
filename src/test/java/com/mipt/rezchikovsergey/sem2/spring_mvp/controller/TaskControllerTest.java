@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -7,14 +7,14 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.CreateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.UpdateTaskRequest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.IDResponse;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +30,15 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class TaskControllerTest {
   @Autowired private TestRestTemplate restTemplate;
+
   @MockitoBean private TaskService taskService;
 
   private static final String API_PATH = "/api/tasks";
-  private static final Task TEST_TASK = new Task(UUID.randomUUID(), "title", "description", true);
 
   @Test
   public void getAllTasks_Positive() {
-    when(taskService.getAllTasks()).thenReturn(List.of(TEST_TASK));
+    when(taskService.getAllTasks())
+        .thenReturn(List.of(TaskFactory.task(TaskFactory.DEFAULT_TASK_ID)));
 
     ResponseEntity<Task[]> response = restTemplate.getForEntity(API_PATH, Task[].class);
 
@@ -57,44 +58,45 @@ public class TaskControllerTest {
 
   @Test
   public void getTaskById_Positive() {
-    when(taskService.getTaskById(TEST_TASK.getId())).thenReturn(TEST_TASK);
+    Task testTask = TaskFactory.task(TaskFactory.DEFAULT_TASK_ID);
+    when(taskService.getTaskById(testTask.getId())).thenReturn(testTask);
 
     ResponseEntity<Task> response =
-        restTemplate.getForEntity(API_PATH + "/" + TEST_TASK.getId(), Task.class);
+        restTemplate.getForEntity(API_PATH + "/" + testTask.getId(), Task.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
     Assertions.assertNotNull(response.getBody());
-    assertEquals(TEST_TASK.getId(), response.getBody().getId());
+    assertEquals(testTask.getId(), response.getBody().getId());
   }
 
   @Test
   public void getTaskById_Nonexistent() {
-    UUID id = UUID.randomUUID();
-    when(taskService.getTaskById(id)).thenThrow(new TaskNotFoundException(id));
+    when(taskService.getTaskById(TaskFactory.DEFAULT_TASK_ID))
+        .thenThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID));
 
-    ResponseEntity<String> response = restTemplate.getForEntity(API_PATH + "/" + id, String.class);
+    ResponseEntity<String> response =
+        restTemplate.getForEntity(API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, String.class);
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 
   @Test
   public void createTask_Positive() {
-    CreateTaskRequest request = new CreateTaskRequest("title", "description");
-    UUID id = UUID.randomUUID();
-    when(taskService.createTask(request)).thenReturn(id);
+    TaskCreateDto request = TaskFactory.taskCreateDto();
+    when(taskService.createTask(request)).thenReturn(TaskFactory.task(TaskFactory.DEFAULT_TASK_ID));
 
-    ResponseEntity<IDResponse> response =
-        restTemplate.postForEntity(API_PATH, request, IDResponse.class);
+    ResponseEntity<TaskResponseDto> response =
+        restTemplate.postForEntity(API_PATH, request, TaskResponseDto.class);
 
     assertEquals(HttpStatus.CREATED, response.getStatusCode());
     assertNotNull(response.getHeaders().getLocation());
     assertNotNull(response.getBody());
-    assertEquals(id, response.getBody().id());
+    assertEquals(TaskFactory.DEFAULT_TASK_ID, response.getBody().id());
   }
 
   @Test
   public void createTask_InternalError() {
-    CreateTaskRequest request = new CreateTaskRequest("title", "description");
+    TaskCreateDto request = TaskFactory.taskCreateDto();
     when(taskService.createTask(request)).thenThrow(new RuntimeException("Some error"));
 
     ResponseEntity<String> response = restTemplate.postForEntity(API_PATH, request, String.class);
@@ -104,48 +106,52 @@ public class TaskControllerTest {
 
   @Test
   public void updateTask_Positive() {
-    UpdateTaskRequest request = new UpdateTaskRequest("title", "description", true);
-    UUID id = UUID.randomUUID();
-    doNothing().when(taskService).updateTask(id, request);
+    TaskUpdateDto request = TaskFactory.taskUpdateDto();
+    doNothing().when(taskService).updateTask(TaskFactory.DEFAULT_TASK_ID, request);
 
-    HttpEntity<UpdateTaskRequest> entity = new HttpEntity<>(request);
-    ResponseEntity<Object> response =
-        restTemplate.exchange(API_PATH + "/" + id, HttpMethod.PUT, entity, Object.class);
+    HttpEntity<TaskUpdateDto> entity = new HttpEntity<>(request);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.PUT, entity, String.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
   @Test
   public void updateTask_Nonexistent() {
-    UpdateTaskRequest request = new UpdateTaskRequest("title", "description", true);
-    UUID id = UUID.randomUUID();
-    doThrow(new TaskNotFoundException(id)).when(taskService).updateTask(id, request);
+    TaskUpdateDto request = TaskFactory.taskUpdateDto();
+    doThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID))
+        .when(taskService)
+        .updateTask(TaskFactory.DEFAULT_TASK_ID, request);
 
-    HttpEntity<UpdateTaskRequest> entity = new HttpEntity<>(request);
+    HttpEntity<TaskUpdateDto> entity = new HttpEntity<>(request);
     ResponseEntity<String> response =
-        restTemplate.exchange(API_PATH + "/" + id, HttpMethod.PUT, entity, String.class);
+        restTemplate.exchange(
+            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.PUT, entity, String.class);
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }
 
   @Test
   public void removeTask_Positive() {
-    UUID id = UUID.randomUUID();
-    doNothing().when(taskService).removeTask(id);
+    doNothing().when(taskService).removeTask(TaskFactory.DEFAULT_TASK_ID);
 
-    ResponseEntity<Object> response =
-        restTemplate.exchange(API_PATH + "/" + id, HttpMethod.DELETE, null, Object.class);
+    ResponseEntity<String> response =
+        restTemplate.exchange(
+            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.DELETE, null, String.class);
 
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
   @Test
   public void removeTask_Nonexistent() {
-    UUID id = UUID.randomUUID();
-    doThrow(new TaskNotFoundException(id)).when(taskService).removeTask(id);
+    doThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID))
+        .when(taskService)
+        .removeTask(TaskFactory.DEFAULT_TASK_ID);
 
     ResponseEntity<String> response =
-        restTemplate.exchange(API_PATH + "/" + id, HttpMethod.DELETE, null, String.class);
+        restTemplate.exchange(
+            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.DELETE, null, String.class);
 
     assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
   }

@@ -20,6 +20,11 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Build and Run Tests
-        run: |
-          mvn -B clean verify
+      - name: Compile Application Code
+        run: mvn clean compile
+
+      - name: Compile Test Code
+        run: mvn test-compile
+
+      - name: Run Tests
+        run: mvn verify -Dskip.installnits=true
