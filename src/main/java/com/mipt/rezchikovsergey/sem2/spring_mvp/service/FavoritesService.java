@@ -4,6 +4,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -42,7 +43,7 @@ public class FavoritesService {
     Set<UUID> favorites = (Set<UUID>) session.getAttribute(getFavoritesKey());
 
     if (favorites == null) {
-      return Set.of();
+      return new HashSet<>();
     }
 
     return favorites;
