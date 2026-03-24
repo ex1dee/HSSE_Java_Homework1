@@ -6,9 +6,16 @@ spring:
     active: dev
 
 app:
-  name: "Task Manager"
-  version: "2.0.0"
+  info:
+    name: "Task Manager"
+    version: "2.0.0"
+    description: "API for managing a task list"
 
+    contact:
+      name: "Sergey Rezchikov"
+      email: "rezchikov.sa@phystech.edu"
+      url: "https://github.com/ex1dee"
+  
   cors:
     allowed-origins:
       - "http://localhost:3000"

@@ -8,6 +8,9 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseD
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.mapper.TaskMapper;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
@@ -28,11 +31,16 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 @RequestMapping("/api/tasks")
 @RequiredArgsConstructor
+@Tag(name = "Tasks", description = "Management of tasks")
 public class TaskController {
   private final TaskService taskService;
   private final TaskMapper taskMapper;
 
   @GetMapping
+  @Operation(
+      summary = "Get all tasks",
+      description = "Returns all tasks with 'X-Total-Count' header.")
+  @ApiResponse(responseCode = "200", description = "List of tasks retrieved")
   public ResponseEntity<List<TaskResponseDto>> getAllTasks() {
     List<Task> tasks = taskService.getAllTasks();
     List<TaskResponseDto> responseDtos = tasks.stream().map(taskMapper::toResponseDto).toList();
@@ -43,6 +51,9 @@ public class TaskController {
   }
 
   @GetMapping("/{id}")
+  @Operation(summary = "Get task by ID")
+  @ApiResponse(responseCode = "200", description = "Task found")
+  @ApiResponse(responseCode = "404", description = "Task not found")
   public ResponseEntity<TaskResponseDto> getTaskById(@PathVariable("id") UUID id) {
     Task task = taskService.getTaskById(id);
     TaskResponseDto responseDto = taskMapper.toResponseDto(task);
@@ -51,6 +62,9 @@ public class TaskController {
   }
 
   @PostMapping
+  @Operation(summary = "Create task")
+  @ApiResponse(responseCode = "201", description = "Task created")
+  @ApiResponse(responseCode = "400", description = "Validation error (OnCreate)")
   public ResponseEntity<TaskResponseDto> createTask(
       @Validated(OnCreate.class) @RequestBody TaskCreateDto request) {
     Task task = taskService.createTask(request);
@@ -65,6 +79,12 @@ public class TaskController {
   }
 
   @PutMapping("/{id}")
+  @Operation(
+      summary = "Update task",
+      description = "Updates task. Throws error if dueDate is before creation.")
+  @ApiResponse(responseCode = "200", description = "Task updated")
+  @ApiResponse(responseCode = "400", description = "Invalid dates or validation error")
+  @ApiResponse(responseCode = "404", description = "Task not found")
   public ResponseEntity<String> updateTask(
       @PathVariable("id") UUID id, @Validated(OnUpdate.class) @RequestBody TaskUpdateDto request) {
     taskService.updateTask(id, request);
@@ -73,6 +93,9 @@ public class TaskController {
   }
 
   @DeleteMapping("/{id}")
+  @Operation(summary = "Delete task")
+  @ApiResponse(responseCode = "200", description = "Task deleted")
+  @ApiResponse(responseCode = "404", description = "Task not found")
   public ResponseEntity<String> removeTask(@PathVariable("id") UUID id) {
     taskService.removeTask(id);
 

@@ -24,7 +24,7 @@ public class ResponseHeadersAspect {
     if (result instanceof ResponseEntity<?> response) {
       HttpHeaders headers = new HttpHeaders();
       headers.addAll(response.getHeaders());
-      headers.add("X-API-Version", appProperties.version());
+      headers.add("X-API-Version", appProperties.info().version());
 
       return new ResponseEntity<>(response.getBody(), headers, response.getStatusCode());
     }

@@ -2,6 +2,8 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.UnknownViewModeException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,11 @@ public class PreferencesController {
   private static final String VIEW_COMPACT_MODE = "compact";
 
   @GetMapping("/view")
+  @Operation(
+      summary = "Get view preference",
+      description =
+          "Reads the UI display mode (compact/detailed) from the browser cookies. Defaults to 'detailed' if no cookie is present.")
+  @ApiResponse(responseCode = "200", description = "Current view mode string")
   public ResponseEntity<String> getViewPreference(
       @CookieValue(value = "${app.cookie.view-name}", defaultValue = VIEW_DETAILED_MODE)
           String mode) {
@@ -30,6 +37,9 @@ public class PreferencesController {
   }
 
   @PostMapping
+  @Operation(summary = "Set UI mode")
+  @ApiResponse(responseCode = "200", description = "Cookie set")
+  @ApiResponse(responseCode = "400", description = "Unknown mode (not 'detailed'/'compact')")
   public ResponseEntity<Void> setViewPreference(
       @RequestParam String mode, HttpServletResponse response) {
     if (!mode.equals(VIEW_DETAILED_MODE) && !mode.equals(VIEW_COMPACT_MODE)) {
