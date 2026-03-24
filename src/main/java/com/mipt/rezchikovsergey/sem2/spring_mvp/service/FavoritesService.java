@@ -1,6 +1,7 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import jakarta.servlet.http.HttpSession;
@@ -19,6 +20,10 @@ public class FavoritesService {
   private final AppProperties appProperties;
 
   public void addToFavorites(HttpSession session, UUID taskId) {
+    if (!taskRepository.existsById(taskId)) {
+      throw new TaskNotFoundException(taskId);
+    }
+
     Set<UUID> favorites = getFavorites(session);
     favorites.add(taskId);
     session.setAttribute(getFavoritesKey(), favorites);
