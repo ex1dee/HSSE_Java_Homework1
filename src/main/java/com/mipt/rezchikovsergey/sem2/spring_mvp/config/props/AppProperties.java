@@ -16,7 +16,7 @@ public record AppProperties(Info info, Cors cors, Session session, Cookie cookie
   }
 
   public record Cookie(CookieData viewMode) {
-    public record CookieData(String name, int maxAge) {}
+    public record CookieData(String name, String defaultValue, int maxAge) {}
   }
 
   public record Storage(Directories directories) {

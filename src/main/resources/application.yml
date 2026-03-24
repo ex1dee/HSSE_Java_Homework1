@@ -28,6 +28,7 @@ app:
   cookie:
     view-mode:
       name: "viewPreference"
+      default-value: "detailed"
       max-age: 604800 # 7 days
 
   storage:
