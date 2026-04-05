@@ -70,8 +70,11 @@ public class TaskRepository implements CrudRepository<Task> {
 
     return jdbcTemplate.query(
         sql,
-        (rs, rowNum) ->
-            new TaskPriorityCountDto(
-                TaskPriority.valueOf(rs.getString("priority")), rs.getLong("task_count")));
+        (rs, rowNum) -> {
+          String priorityStr = rs.getString("priority");
+          return new TaskPriorityCountDto(
+              priorityStr != null ? TaskPriority.valueOf(priorityStr) : null,
+              rs.getLong("task_count"));
+        });
   }
 }
