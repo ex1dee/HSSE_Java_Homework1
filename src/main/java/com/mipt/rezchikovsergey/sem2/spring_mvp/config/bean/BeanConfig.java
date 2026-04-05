@@ -1,8 +1,6 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.config.bean;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.JpaTaskRepository;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.impl.StubTaskRepository;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -12,11 +10,6 @@ import org.springframework.context.annotation.Configuration;
 /** Конфигурационный класс для настройки бинов приложения. */
 @Configuration
 public class BeanConfig {
-  @Bean
-  public JpaTaskRepository stubTaskRepository() {
-    return new StubTaskRepository();
-  }
-
   @Bean
   public OpenAPI openAPI(AppProperties appProperties) {
     AppProperties.Info info = appProperties.info();

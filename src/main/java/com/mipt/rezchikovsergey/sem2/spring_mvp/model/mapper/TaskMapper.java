@@ -16,11 +16,15 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
     imports = {UUID.class, LocalDateTime.class},
     nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface TaskMapper {
+  @Mapping(target = "updatedAt", ignore = true)
+  @Mapping(target = "attachments", ignore = true)
   @Mapping(target = "id", expression = "java(UUID.randomUUID())")
   @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
   @Mapping(target = "completed", constant = "false")
   Task toEntity(TaskCreateDto dto);
 
+  @Mapping(target = "updatedAt", ignore = true)
+  @Mapping(target = "attachments", ignore = true)
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   void updateEntity(TaskUpdateDto dto, @MappingTarget Task task);
