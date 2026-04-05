@@ -18,7 +18,7 @@ public class TaskAttachmentMapperTest {
     attachment.setId(UUID.randomUUID());
     attachment.setFilename("report.pdf");
     attachment.setSize(1024L);
-    attachment.setUploadedAt(LocalDateTime.now());
+    attachment.setCreatedAt(LocalDateTime.now());
 
     AttachmentResponseDto response = mapper.toResponseDto(attachment);
 
