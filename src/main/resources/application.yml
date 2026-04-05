@@ -12,6 +12,22 @@ app:
     contact:
       name: "Sergey Rezchikov"
       email: "rezchikov.sa@phystech.edu"
+
   storage:
     directories:
       task-attachments: "upload"
+
+  cors:
+    allowed-origins:
+      - "http://localhost:3000"
+    max-age: 3600
+
+  session:
+    attributes:
+      favorite-tasks: "favoriteTasksIds"
+
+  cookie:
+    view-mode:
+      name: "viewPreference"
+      default-value: "detailed"
+      max-age: 604800 # 7 days
