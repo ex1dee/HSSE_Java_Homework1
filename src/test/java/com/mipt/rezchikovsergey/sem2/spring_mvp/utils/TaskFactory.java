@@ -3,6 +3,7 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.utils;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -39,10 +40,24 @@ public class TaskFactory {
         .title("Test Task")
         .description("Test Description")
         .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
         .dueDate(LocalDate.now().plusDays(1))
         .priority(TaskPriority.MEDIUM)
         .completed(false)
         .tags(Set.of("tag"))
+        .build();
+  }
+
+  public static TaskAttachment attachment(Task task, UUID id) {
+    return TaskAttachment.builder()
+        .id(id)
+        .task(task)
+        .filename("file name")
+        .storedFilename(UUID.randomUUID().toString())
+        .contentType("application/octet-stream")
+        .size(1L)
+        .createdAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
         .build();
   }
 }

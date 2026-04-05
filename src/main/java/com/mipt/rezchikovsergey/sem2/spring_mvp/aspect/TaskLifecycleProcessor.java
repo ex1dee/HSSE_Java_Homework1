@@ -1,6 +1,6 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.aspect;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.JpaTaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +36,6 @@ public class TaskLifecycleProcessor implements BeanPostProcessor {
   }
 
   private boolean isTargetBean(Object bean) {
-    return bean instanceof TaskService || bean instanceof TaskRepository;
+    return bean instanceof TaskService || bean instanceof JpaTaskRepository;
   }
 }

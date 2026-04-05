@@ -7,10 +7,12 @@ import static org.mockito.Mockito.*;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskAttachmentNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskAttachmentRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.storage.FileStorage;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -47,12 +49,12 @@ class AttachmentServiceTest {
 
   @Test
   void storeAttachment_Success() {
-    UUID taskId = UUID.randomUUID();
+    Task task = TaskFactory.task(TaskFactory.DEFAULT_TASK_ID);
     MockMultipartFile file =
         new MockMultipartFile("file", "test.png", "image/png", "data".getBytes());
-    when(taskRepository.existsById(taskId)).thenReturn(true);
+    when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
 
-    TaskAttachment result = attachmentService.storeAttachment(taskId, file);
+    TaskAttachment result = attachmentService.storeAttachment(task.getId(), file);
 
     assertNotNull(result);
     verify(fileStorage).store(any(InputStream.class), eq(testPath), anyString());
@@ -61,14 +63,14 @@ class AttachmentServiceTest {
 
   @Test
   void storeAttachment_TaskNotFound() {
-    UUID taskId = UUID.randomUUID();
-    when(taskRepository.existsById(taskId)).thenReturn(false);
+    Task task = TaskFactory.task(TaskFactory.DEFAULT_TASK_ID);
+    when(taskRepository.findById(task.getId())).thenReturn(Optional.empty());
 
     assertThrows(
         TaskNotFoundException.class,
         () ->
             attachmentService.storeAttachment(
-                taskId, new MockMultipartFile("f", "t.txt".getBytes())));
+                task.getId(), new MockMultipartFile("f", "t.txt".getBytes())));
     verify(fileStorage, never()).store(any(), any(), any());
   }
 

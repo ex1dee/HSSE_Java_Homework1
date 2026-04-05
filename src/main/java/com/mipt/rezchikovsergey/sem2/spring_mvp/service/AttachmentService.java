@@ -4,6 +4,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskAttachmentNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.web.FileReadStreamException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskAttachmentRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
@@ -11,12 +12,12 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.storage.FileStorage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
@@ -27,55 +28,66 @@ public class AttachmentService {
   private final FileStorage fileStorage;
   private final AppProperties appProperties;
 
+  @Transactional
   public TaskAttachment storeAttachment(UUID taskId, MultipartFile file) {
-    validateTaskExists(taskId);
+    Task task = getTask(taskId);
+    TaskAttachment attachment = createTaskAttachment(task, file);
 
-    TaskAttachment attachment = createTaskAttachment(taskId, file);
     saveFileToStorage(file, attachment.getStoredFilename());
     attachmentRepository.save(attachment);
 
     return attachment;
   }
 
+  @Transactional(readOnly = true)
   public Resource loadAsResource(UUID attachmentId) {
     TaskAttachment attachment = getAttachment(attachmentId);
     return fileStorage.loadAsResource(getUploadDirectory(), attachment.getStoredFilename());
   }
 
-  public void deleteAttachment(UUID attachmentId) {
-    TaskAttachment attachment = getAttachment(attachmentId);
-    fileStorage.delete(getUploadDirectory(), attachment.getStoredFilename());
-    attachmentRepository.removeById(attachmentId);
+  @Transactional
+  public void deleteAllAttachments(Task task) {
+    task.getAttachments().forEach(this::deleteFromStorage);
+    task.getAttachments().clear();
   }
 
+  @Transactional
+  public void deleteAttachment(UUID attachmentId) {
+    TaskAttachment attachment = getAttachment(attachmentId);
+    attachmentRepository.removeById(attachmentId);
+    deleteFromStorage(attachment);
+  }
+
+  @Transactional(readOnly = true)
+  public List<TaskAttachment> getTaskAttachments(UUID taskId) {
+    Task task = getTask(taskId);
+    return task.getAttachments();
+  }
+
+  @Transactional(readOnly = true)
   public TaskAttachment getAttachment(UUID attachmentId) {
     return attachmentRepository
         .findById(attachmentId)
         .orElseThrow(() -> new TaskAttachmentNotFoundException(attachmentId));
   }
 
-  public List<TaskAttachment> getTaskAttachments(UUID taskId) {
-    validateTaskExists(taskId);
-
-    return attachmentRepository.findAttachmentsWithTaskId(taskId);
+  private Task getTask(UUID taskId) {
+    return taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException(taskId));
   }
 
-  private void validateTaskExists(UUID taskId) {
-    if (!taskRepository.existsById(taskId)) {
-      throw new TaskNotFoundException(taskId);
-    }
+  private void deleteFromStorage(TaskAttachment attachment) {
+    fileStorage.delete(getUploadDirectory(), attachment.getStoredFilename());
   }
 
-  private TaskAttachment createTaskAttachment(UUID taskId, MultipartFile file) {
+  private TaskAttachment createTaskAttachment(Task task, MultipartFile file) {
     UUID attachmentId = UUID.randomUUID();
 
     return TaskAttachment.builder()
         .id(attachmentId)
-        .taskId(taskId)
+        .task(task)
         .filename(file.getOriginalFilename())
         .storedFilename(attachmentId.toString())
         .contentType(file.getContentType())
-        .uploadedAt(LocalDateTime.now())
         .size(file.getSize())
         .build();
   }

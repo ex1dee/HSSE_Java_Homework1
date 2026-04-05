@@ -3,7 +3,7 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.JpaTaskRepository;
 import jakarta.servlet.http.HttpSession;
 import java.util.HashSet;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class FavoritesService {
-  private final TaskRepository taskRepository;
+  private final JpaTaskRepository taskRepository;
   private final AppProperties appProperties;
 
   public void addToFavorites(HttpSession session, UUID taskId) {

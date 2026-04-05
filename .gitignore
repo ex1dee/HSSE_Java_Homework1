@@ -113,3 +113,6 @@ project/plugins/project/
 log/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+
+# Configurations
+.env
