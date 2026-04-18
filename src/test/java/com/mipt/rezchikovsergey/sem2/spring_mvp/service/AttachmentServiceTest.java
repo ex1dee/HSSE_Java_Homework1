@@ -1,17 +1,25 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskAttachmentNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskAttachmentNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskAttachmentRepository;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.TaskRepository;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.storage.FileStorage;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskAttachmentRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.AttachmentService;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.storage.FileStorage;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.io.InputStream;
 import java.nio.file.Path;

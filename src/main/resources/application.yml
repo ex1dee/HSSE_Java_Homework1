@@ -5,7 +5,34 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      externalApi:
+        slidingWindowSize: 10         # Сколько последних запросов анализируем
+        failureRateThreshold: 50       # Процент ошибок (50%), после которого цепь размыкается
+        waitDurationInOpenState: 10s   # Сколько ждем в состоянии OPEN перед переходом в HALF_OPEN
+        permittedNumberOfCallsInHalfOpenState: 3 # Сколько пробных запросов пустить в полуоткрытом состоянии
+        registerHealthIndicator: true  # Чтобы видеть статус в Actuator
+
+  ratelimiter:
+    instances:
+      externalApi:
+        limitForPeriod: 5              # Разрешено 5 запросов
+        limitRefreshPeriod: 1s         # За каждый период в 1 секунду
+        timeoutDuration: 0
+
 app:
+  client:
+    connection-timeout-sec: 5
+    read-timeout-sec: 2
+
+    user-agent: "TM-Gateway-Service"
+    base-url: ${EXTERNAL_API_URL}
+
+    log:
+      max-error-snippet-length: 100
+
   info:
     name: "Task Manager"
     version: "2.0.0"

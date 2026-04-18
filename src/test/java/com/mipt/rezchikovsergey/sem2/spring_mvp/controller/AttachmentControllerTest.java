@@ -13,9 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseMvcTest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.MyWebMvcTest;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskAttachmentNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.AttachmentResponseDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskAttachmentNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.AttachmentResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -23,24 +22,23 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
-@MyWebMvcTest(AttachmentController.class)
+@MyWebMvcTest(GatewayAttachmentController.class)
 public class AttachmentControllerTest extends BaseMvcTest {
   @Test
   void shouldUploadFileAndReturnJson() throws Exception {
     MockMultipartFile file =
         new MockMultipartFile("file", "test.txt", MediaType.TEXT_PLAIN_VALUE, "Hello".getBytes());
 
-    TaskAttachment attachment = new TaskAttachment();
-    attachment.setId(TaskFactory.DEFAULT_ATTACHMENT_ID);
-    attachment.setFilename("test.txt");
-
     AttachmentResponseDto responseDto =
-        AttachmentResponseDto.builder().id(attachment.getId()).filename("test.txt").build();
+        AttachmentResponseDto.builder()
+            .id(TaskFactory.DEFAULT_ATTACHMENT_ID)
+            .filename("test.txt")
+            .build();
 
-    when(attachmentService.storeAttachment(any(UUID.class), any())).thenReturn(attachment);
-    when(attachmentMapper.toResponseDto(attachment)).thenReturn(responseDto);
+    when(attachmentService.storeAttachment(any(UUID.class), any())).thenReturn(responseDto);
 
     mockMvc
         .perform(
@@ -53,15 +51,16 @@ public class AttachmentControllerTest extends BaseMvcTest {
 
   @Test
   void shouldDownloadFileWithCorrectHeaders() throws Exception {
-    TaskAttachment attachment = new TaskAttachment();
-    attachment.setFilename("manual.pdf");
-    attachment.setContentType("application/pdf");
-
     Resource mockResource = new ByteArrayResource("content".getBytes());
 
-    when(attachmentService.getAttachment(TaskFactory.DEFAULT_ATTACHMENT_ID)).thenReturn(attachment);
-    when(attachmentService.loadAsResource(TaskFactory.DEFAULT_ATTACHMENT_ID))
-        .thenReturn(mockResource);
+    ResponseEntity<Resource> responseEntity =
+        ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"manual.pdf\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(mockResource);
+
+    when(attachmentService.downloadAttachment(TaskFactory.DEFAULT_ATTACHMENT_ID))
+        .thenReturn(responseEntity);
 
     mockMvc
         .perform(get("/api/attachments/{attachmentId}", TaskFactory.DEFAULT_ATTACHMENT_ID))
@@ -73,7 +72,7 @@ public class AttachmentControllerTest extends BaseMvcTest {
 
   @Test
   void shouldReturn404WhenDownloadingNonExistentFile() throws Exception {
-    when(attachmentService.getAttachment(TaskFactory.DEFAULT_ATTACHMENT_ID))
+    when(attachmentService.downloadAttachment(TaskFactory.DEFAULT_ATTACHMENT_ID))
         .thenThrow(new TaskAttachmentNotFoundException(TaskFactory.DEFAULT_ATTACHMENT_ID));
 
     mockMvc

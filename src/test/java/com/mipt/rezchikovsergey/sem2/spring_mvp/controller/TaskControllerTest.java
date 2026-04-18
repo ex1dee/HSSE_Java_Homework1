@@ -7,12 +7,12 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.service.TaskService;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.TaskResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.TaskService;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;

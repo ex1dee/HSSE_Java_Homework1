@@ -13,10 +13,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.repository.JpaTaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.JpaTaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.FavoritesService;
 import jakarta.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Collections;

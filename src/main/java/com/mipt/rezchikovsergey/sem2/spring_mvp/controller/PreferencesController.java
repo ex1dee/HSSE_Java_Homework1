@@ -1,7 +1,7 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.exceptions.task.UnknownViewModeException;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.UnknownViewModeException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.servlet.http.Cookie;
