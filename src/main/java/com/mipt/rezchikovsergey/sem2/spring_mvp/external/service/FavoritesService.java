@@ -1,60 +1,47 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.external.service;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.FavoriteTask;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.JpaTaskRepository;
-import jakarta.servlet.http.HttpSession;
-import java.util.HashSet;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.FavoriteTaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class FavoritesService {
-  private final JpaTaskRepository taskRepository;
-  private final AppProperties appProperties;
+  private final TaskRepository taskRepository;
+  private final FavoriteTaskRepository favoriteTaskRepository;
 
-  public void addToFavorites(HttpSession session, UUID taskId) {
+  @Transactional
+  public void addToFavorites(UUID userId, UUID taskId) {
     if (!taskRepository.existsById(taskId)) {
       throw new TaskNotFoundException(taskId);
     }
 
-    Set<UUID> favorites = getFavorites(session);
-    favorites.add(taskId);
-    session.setAttribute(getFavoritesKey(), favorites);
+    if (!favoriteTaskRepository.isFavorite(userId, taskId)) {
+      FavoriteTask favorite = FavoriteTask.builder().userId(userId).taskId(taskId).build();
+      favoriteTaskRepository.save(favorite);
+    }
   }
 
-  public void removeFromFavorites(HttpSession session, UUID taskId) {
-    Set<UUID> favorites = getFavorites(session);
-    favorites.remove(taskId);
-    session.setAttribute(getFavoritesKey(), favorites);
+  @Transactional
+  public void removeFromFavorites(UUID userId, UUID taskId) {
+    favoriteTaskRepository.removeByUserAndTask(userId, taskId);
   }
 
-  public List<Task> getFavoriteTasks(HttpSession session) {
-    Set<UUID> favorites = getFavorites(session);
+  @Transactional(readOnly = true)
+  public List<Task> getFavoriteTasks(UUID userId) {
+    List<FavoriteTask> favorites = favoriteTaskRepository.findByUserId(userId);
+
     return favorites.stream()
-        .map(taskId -> taskRepository.findById(taskId).orElse(null))
+        .map(fav -> taskRepository.findById(fav.getTaskId()).orElse(null))
         .filter(Objects::nonNull)
         .toList();
-  }
-
-  @SuppressWarnings("unchecked")
-  private Set<UUID> getFavorites(HttpSession session) {
-    Set<UUID> favorites = (Set<UUID>) session.getAttribute(getFavoritesKey());
-
-    if (favorites == null) {
-      return new HashSet<>();
-    }
-
-    return favorites;
-  }
-
-  private String getFavoritesKey() {
-    return appProperties.session().attributes().favoriteTasks();
   }
 }

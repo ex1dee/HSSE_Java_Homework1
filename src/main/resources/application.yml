@@ -49,10 +49,6 @@ app:
       - "http://localhost:3000"
     max-age: 3600
 
-  session:
-    attributes:
-      favorite-tasks: "favoriteTasksIds"
-
   cookie:
     view-mode:
       name: "viewPreference"

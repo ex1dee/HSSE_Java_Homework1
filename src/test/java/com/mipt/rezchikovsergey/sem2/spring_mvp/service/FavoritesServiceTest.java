@@ -4,27 +4,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.config.props.AppProperties;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.FavoriteTask;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.JpaTaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.FavoriteTaskRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.FavoritesService;
-import jakarta.servlet.http.HttpSession;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,98 +27,77 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class FavoritesServiceTest {
-
-  @Mock private JpaTaskRepository taskRepository;
-
-  @Mock private AppProperties appProperties;
-
-  @Mock private HttpSession session;
+  @Mock private TaskRepository taskRepository;
+  @Mock private FavoriteTaskRepository favoriteTaskRepository;
 
   @InjectMocks private FavoritesService favoritesService;
 
-  private static final String FAV_KEY = "favoriteTasksIds";
+  private UUID userId;
+  private UUID taskId;
 
   @BeforeEach
   void setUp() {
-    lenient().when(appProperties.session()).thenReturn(mock(AppProperties.Session.class));
-    lenient()
-        .when(appProperties.session().attributes())
-        .thenReturn(mock(AppProperties.Session.Attributes.class));
-    lenient().when(appProperties.session().attributes().favoriteTasks()).thenReturn(FAV_KEY);
+    userId = UUID.randomUUID();
+    taskId = UUID.randomUUID();
   }
 
-  @SuppressWarnings("unchecked")
   @Test
-  void addToFavorites_ShouldAddNewId_WhenTaskExists() {
-    UUID taskId = UUID.randomUUID();
+  void addToFavorites_ShouldSave_WhenTaskExistsAndNotAlreadyFavorite() {
     when(taskRepository.existsById(taskId)).thenReturn(true);
-    when(session.getAttribute(FAV_KEY)).thenReturn(null);
+    when(favoriteTaskRepository.isFavorite(userId, taskId)).thenReturn(false);
 
-    favoritesService.addToFavorites(session, taskId);
+    favoritesService.addToFavorites(userId, taskId);
 
-    verify(session)
-        .setAttribute(
-            eq(FAV_KEY),
-            argThat(
-                argument -> {
-                  Set<UUID> set = (Set<UUID>) argument;
-                  return set.contains(taskId);
-                }));
+    verify(favoriteTaskRepository).save(any(FavoriteTask.class));
+  }
+
+  @Test
+  void addToFavorites_ShouldNotSave_WhenAlreadyInFavorites() {
+    when(taskRepository.existsById(taskId)).thenReturn(true);
+    when(favoriteTaskRepository.isFavorite(userId, taskId)).thenReturn(true);
+
+    favoritesService.addToFavorites(userId, taskId);
+
+    verify(favoriteTaskRepository, never()).save(any());
   }
 
   @Test
   void addToFavorites_ShouldThrowException_WhenTaskDoesNotExist() {
-    UUID taskId = UUID.randomUUID();
     when(taskRepository.existsById(taskId)).thenReturn(false);
 
     assertThrows(
-        TaskNotFoundException.class, () -> favoritesService.addToFavorites(session, taskId));
-    verify(session, never()).setAttribute(anyString(), any());
-  }
+        TaskNotFoundException.class, () -> favoritesService.addToFavorites(userId, taskId));
 
-  @SuppressWarnings("unchecked")
-  @Test
-  void removeFromFavorites_ShouldRemoveIdFromSession() {
-    UUID taskId = UUID.randomUUID();
-    Set<UUID> currentFavorites = new HashSet<>(Collections.singletonList(taskId));
-    when(session.getAttribute(FAV_KEY)).thenReturn(currentFavorites);
-
-    favoritesService.removeFromFavorites(session, taskId);
-
-    verify(session)
-        .setAttribute(
-            eq(FAV_KEY),
-            argThat(
-                argument -> {
-                  Set<UUID> set = (Set<UUID>) argument;
-                  return !set.contains(taskId);
-                }));
+    verify(favoriteTaskRepository, never()).save(any());
   }
 
   @Test
-  void getFavoriteTasks_ShouldReturnOnlyExistingTasks() {
-    UUID id1 = UUID.randomUUID();
-    UUID id2 = UUID.randomUUID();
-    Set<UUID> favoriteIds = new HashSet<>(Arrays.asList(id1, id2));
+  void removeFromFavorites_ShouldCallRepositoryDelete() {
+    favoritesService.removeFromFavorites(userId, taskId);
 
-    Task task1 = new Task();
-    task1.setId(id1);
+    verify(favoriteTaskRepository).removeByUserAndTask(userId, taskId);
+  }
 
-    when(session.getAttribute(FAV_KEY)).thenReturn(favoriteIds);
-    when(taskRepository.findById(id1)).thenReturn(Optional.of(task1));
-    when(taskRepository.findById(id2)).thenReturn(Optional.empty());
+  @Test
+  void getFavoriteTasks_ShouldReturnMappedTasks() {
+    Task task = new Task();
+    task.setId(taskId);
+    FavoriteTask favoriteTask = FavoriteTask.builder().userId(userId).taskId(taskId).build();
 
-    List<Task> result = favoritesService.getFavoriteTasks(session);
+    when(favoriteTaskRepository.findByUserId(userId)).thenReturn(List.of(favoriteTask));
+    when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
+
+    List<Task> result = favoritesService.getFavoriteTasks(userId);
 
     assertEquals(1, result.size());
-    assertEquals(id1, result.getFirst().getId());
+    assertEquals(taskId, result.getFirst().getId());
   }
 
   @Test
-  void getFavoriteTasks_ShouldReturnEmptyList_WhenNoFavoritesInSession() {
-    when(session.getAttribute(FAV_KEY)).thenReturn(null);
+  void getFavoriteTasks_ShouldReturnEmptyList_WhenNoFavoritesInDb() {
+    when(favoriteTaskRepository.findByUserId(userId)).thenReturn(Collections.emptyList());
 
-    List<Task> result = favoritesService.getFavoriteTasks(session);
+    List<Task> result = favoritesService.getFavoriteTasks(userId);
 
     assertTrue(result.isEmpty());
     verify(taskRepository, never()).findById(any());
