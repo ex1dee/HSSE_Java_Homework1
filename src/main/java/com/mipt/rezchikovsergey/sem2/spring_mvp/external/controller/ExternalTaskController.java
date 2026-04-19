@@ -6,11 +6,14 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.TaskRe
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.mapper.TaskMapper;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.TaskService;
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/external/v1/tasks")
@@ -33,19 +36,30 @@ public class ExternalTaskController {
 
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
-  public TaskResponseDto createTask(@RequestBody TaskCreateDto request) {
+  public ResponseEntity<TaskResponseDto> createTask(@RequestBody TaskCreateDto request) {
     Task task = taskService.createTask(request);
-    return taskMapper.toResponseDto(task);
+    TaskResponseDto response = taskMapper.toResponseDto(task);
+
+    URI location =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(response.id())
+            .toUri();
+
+    return ResponseEntity.created(location).body(response);
   }
 
   @PutMapping("/{id}")
-  public void updateTask(@PathVariable UUID id, @RequestBody TaskUpdateDto request) {
+  public ResponseEntity<Void> updateTask(
+      @PathVariable UUID id, @RequestBody TaskUpdateDto request) {
     taskService.updateTask(id, request);
+    return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  public void deleteTask(@PathVariable UUID id) {
+  public ResponseEntity<Void> deleteTask(@PathVariable UUID id) {
     taskService.removeTask(id);
+    return ResponseEntity.noContent().build();
   }
 }
