@@ -4,10 +4,15 @@ import java.nio.file.Path;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
-public record AppProperties(Client client, Info info, Cors cors, Cookie cookie, Storage storage) {
+public record AppProperties(
+    Client client, Security security, Info info, Cors cors, Cookie cookie, Storage storage) {
   public record Client(
       int connectionTimeoutSec, int readTimeoutSec, String userAgent, String baseUrl, Log log) {
     public record Log(int maxErrorSnippetLength) {}
+  }
+
+  public record Security(Jwt jwt, String passwordPepper) {
+    public record Jwt(String secretKey, long expirationMs) {}
   }
 
   public record Info(String name, String version, String description, Contact contact) {

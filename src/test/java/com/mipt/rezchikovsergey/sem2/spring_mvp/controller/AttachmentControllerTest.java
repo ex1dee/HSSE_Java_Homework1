@@ -15,6 +15,7 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseMvcTest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.MyWebMvcTest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskAttachmentNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.AttachmentResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.controller.task.GatewayAttachmentController;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

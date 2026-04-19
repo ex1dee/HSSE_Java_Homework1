@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.controller.task;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.AttachmentResponseDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.service.GatewayAttachmentService;

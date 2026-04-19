@@ -49,7 +49,7 @@ public class GatewayTaskService {
     client.removeTask(id);
   }
 
-  private List<TaskResponseDto> fallbackGetTasks() {
+  private List<TaskResponseDto> fallbackGetTasks(Throwable t) {
     return Collections.emptyList();
   }
 }

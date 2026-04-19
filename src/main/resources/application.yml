@@ -9,17 +9,17 @@ resilience4j:
   circuitbreaker:
     instances:
       externalApi:
-        slidingWindowSize: 10         # Сколько последних запросов анализируем
-        failureRateThreshold: 50       # Процент ошибок (50%), после которого цепь размыкается
-        waitDurationInOpenState: 10s   # Сколько ждем в состоянии OPEN перед переходом в HALF_OPEN
-        permittedNumberOfCallsInHalfOpenState: 3 # Сколько пробных запросов пустить в полуоткрытом состоянии
-        registerHealthIndicator: true  # Чтобы видеть статус в Actuator
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        registerHealthIndicator: true
 
   ratelimiter:
     instances:
       externalApi:
-        limitForPeriod: 5              # Разрешено 5 запросов
-        limitRefreshPeriod: 1s         # За каждый период в 1 секунду
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
         timeoutDuration: 0
 
 app:
@@ -32,6 +32,13 @@ app:
 
     log:
       max-error-snippet-length: 100
+
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration-ms: 900000 # 15m
+
+    password-pepper: ${PASSWORD_PEPPER}
 
   info:
     name: "Task Manager"

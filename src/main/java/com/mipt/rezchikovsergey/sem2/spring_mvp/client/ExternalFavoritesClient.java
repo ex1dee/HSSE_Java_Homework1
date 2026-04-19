@@ -13,26 +13,29 @@ import org.springframework.web.client.RestClient;
 public class ExternalFavoritesClient {
   private final RestClient externalClient;
 
-  public void addToFavorites(UUID taskId) {
+  public void addToFavorites(UUID userId, UUID taskId) {
     externalClient
         .post()
         .uri("/external/v1/favorites/{taskId}", taskId)
+        .header("X-User-Id", userId.toString())
         .retrieve()
         .toBodilessEntity();
   }
 
-  public void removeFromFavorites(UUID taskId) {
+  public void removeFromFavorites(UUID userId, UUID taskId) {
     externalClient
         .delete()
         .uri("/external/v1/favorites/{taskId}", taskId)
+        .header("X-User-Id", userId.toString())
         .retrieve()
         .toBodilessEntity();
   }
 
-  public List<TaskResponseDto> getFavoriteTasks() {
+  public List<TaskResponseDto> getFavoriteTasks(UUID userId) {
     return externalClient
         .get()
         .uri("/external/v1/favorites")
+        .header("X-User-Id", userId.toString())
         .retrieve()
         .body(new ParameterizedTypeReference<List<TaskResponseDto>>() {});
   }

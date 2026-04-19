@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseMvcTest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.MyWebMvcTest;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.controller.task.PreferencesController;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
 

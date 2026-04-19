@@ -1,4 +1,4 @@
-package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
+package com.mipt.rezchikovsergey.sem2.spring_mvp.controller.task;
 
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.groups.OnCreate;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.groups.OnUpdate;

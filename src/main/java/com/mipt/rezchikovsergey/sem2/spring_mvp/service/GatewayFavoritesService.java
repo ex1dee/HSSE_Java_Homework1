@@ -15,27 +15,27 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class GatewayFavoritesService {
-    private final ExternalFavoritesClient client;
+  private final ExternalFavoritesClient client;
 
-    @RateLimiter(name = EXTERNAL_API_INSTANCE)
-    @CircuitBreaker(name = EXTERNAL_API_INSTANCE)
-    public void addToFavorites(UUID taskId) {
-        client.addToFavorites(taskId);
-    }
+  @RateLimiter(name = EXTERNAL_API_INSTANCE)
+  @CircuitBreaker(name = EXTERNAL_API_INSTANCE)
+  public void addToFavorites(UUID userId, UUID taskId) {
+    client.addToFavorites(userId, taskId);
+  }
 
-    @RateLimiter(name = EXTERNAL_API_INSTANCE)
-    @CircuitBreaker(name = EXTERNAL_API_INSTANCE)
-    public void removeFromFavorites(UUID taskId) {
-        client.removeFromFavorites(taskId);
-    }
+  @RateLimiter(name = EXTERNAL_API_INSTANCE)
+  @CircuitBreaker(name = EXTERNAL_API_INSTANCE)
+  public void removeFromFavorites(UUID userId, UUID taskId) {
+    client.removeFromFavorites(userId, taskId);
+  }
 
-    @RateLimiter(name = EXTERNAL_API_INSTANCE)
-    @CircuitBreaker(name = EXTERNAL_API_INSTANCE, fallbackMethod = "fallbackGetFavorites")
-    public List<TaskResponseDto> getFavoriteTasks() {
-        return client.getFavoriteTasks();
-    }
+  @RateLimiter(name = EXTERNAL_API_INSTANCE)
+  @CircuitBreaker(name = EXTERNAL_API_INSTANCE, fallbackMethod = "fallbackGetFavorites")
+  public List<TaskResponseDto> getFavoriteTasks(UUID userId) {
+    return client.getFavoriteTasks(userId);
+  }
 
-    private List<TaskResponseDto> fallbackGetFavorites(Throwable t) {
-        return Collections.emptyList();
-    }
+  private List<TaskResponseDto> fallbackGetFavorites(Throwable t) {
+    return Collections.emptyList();
+  }
 }
