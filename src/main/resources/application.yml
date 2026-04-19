@@ -5,7 +5,55 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      externalApi:
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        registerHealthIndicator: true
+
+  ratelimiter:
+    instances:
+      externalApi:
+        limitForPeriod: 5
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+    ratelimiters:
+      enabled: true
+
 app:
+  client:
+    connection-timeout-sec: 5
+    read-timeout-sec: 2
+
+    user-agent: "TM-Gateway-Service"
+    base-url: ${EXTERNAL_API_URL}
+
+    log:
+      max-error-snippet-length: 100
+
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration-ms: 900000 # 15m
+
+    password-pepper: ${PASSWORD_PEPPER}
+
   info:
     name: "Task Manager"
     version: "2.0.0"
@@ -22,12 +70,12 @@ app:
       - "http://localhost:3000"
     max-age: 3600
 
-  session:
-    attributes:
-      favorite-tasks: "favoriteTasksIds"
-
   cookie:
     view-mode:
       name: "viewPreference"
       default-value: "detailed"
       max-age: 604800 # 7 days
+
+  log:
+    trace-id-header: "X-Trace-Id"
+    mdc-key: "traceId"

@@ -2,10 +2,11 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.TaskPriorityCountDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.TaskPriorityCountDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.time.LocalDate;
 import java.util.List;

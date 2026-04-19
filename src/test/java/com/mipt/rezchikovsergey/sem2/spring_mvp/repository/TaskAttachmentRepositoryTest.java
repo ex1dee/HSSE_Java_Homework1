@@ -1,10 +1,11 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskAttachmentRepository;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.Optional;
 import java.util.UUID;

@@ -2,11 +2,13 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.model.mapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.TaskResponseDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.TaskResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.mapper.TaskMapper;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.mapper.TaskMapperImpl;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;

@@ -3,8 +3,10 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.model.mapper;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.response.AttachmentResponseDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.AttachmentResponseDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.TaskAttachment;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.mapper.TaskAttachmentMapper;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.mapper.TaskAttachmentMapperImpl;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;

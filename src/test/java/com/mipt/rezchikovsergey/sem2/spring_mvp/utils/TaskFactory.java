@@ -1,10 +1,10 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.utils;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskCreateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.dto.request.TaskUpdateDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.entity.TaskAttachment;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskCreateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskUpdateDto;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.enums.TaskPriority;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.TaskAttachment;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
