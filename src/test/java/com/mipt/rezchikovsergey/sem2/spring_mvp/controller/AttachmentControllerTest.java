@@ -85,8 +85,7 @@ public class AttachmentControllerTest extends BaseMvcTest {
   void shouldDeleteAttachment() throws Exception {
     mockMvc
         .perform(delete("/api/attachments/{attachmentId}", TaskFactory.DEFAULT_ATTACHMENT_ID))
-        .andExpect(status().isOk())
-        .andExpect(content().string("Attachment was successfully deleted"));
+        .andExpect(status().isNoContent());
 
     verify(attachmentService).deleteAttachment(TaskFactory.DEFAULT_ATTACHMENT_ID);
   }

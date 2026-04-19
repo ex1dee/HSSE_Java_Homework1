@@ -17,16 +17,10 @@ import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TestAuthUtils;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @MyWebMvcTest(GatewayFavoritesController.class)
 public class FavoritesControllerTest extends BaseMvcTest {
-  @BeforeEach
-  void setUp() {
-    mockAuth();
-  }
-
   @Test
   void shouldAddToFavoritesWithSession() throws Exception {
     UUID userId = TestAuthUtils.getContextUserId();

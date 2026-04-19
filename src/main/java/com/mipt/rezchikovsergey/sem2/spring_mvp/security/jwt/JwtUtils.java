@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class JwtUtils {
   private final byte[] secretKey;
   private final long expirationMs;

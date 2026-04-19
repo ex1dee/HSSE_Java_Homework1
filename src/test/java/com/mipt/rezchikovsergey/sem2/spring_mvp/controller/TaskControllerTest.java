@@ -1,160 +1,144 @@
 package com.mipt.rezchikovsergey.sem2.spring_mvp.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseMvcTest;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.MyWebMvcTest;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.exception.task.TaskNotFoundException;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskCreateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.request.TaskUpdateDto;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.common.model.dto.response.TaskResponseDto;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
-import com.mipt.rezchikovsergey.sem2.spring_mvp.external.service.TaskService;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.controller.task.GatewayTaskController;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
 import java.util.List;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.*;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class TaskControllerTest {
-  @Autowired private TestRestTemplate restTemplate;
-
-  @MockitoBean private TaskService taskService;
+@MyWebMvcTest(GatewayTaskController.class)
+public class TaskControllerTest extends BaseMvcTest {
+  @Autowired private ObjectMapper objectMapper;
 
   private static final String API_PATH = "/api/tasks";
 
   @Test
-  public void getAllTasks_Positive() {
+  void getAllTasks_Positive() throws Exception {
     when(taskService.getAllTasks())
-        .thenReturn(List.of(TaskFactory.task(TaskFactory.DEFAULT_TASK_ID)));
+        .thenReturn(
+            List.of(
+                TaskResponseDto.builder().id(TaskFactory.DEFAULT_TASK_ID).title("Test").build()));
 
-    ResponseEntity<Task[]> response = restTemplate.getForEntity(API_PATH, Task[].class);
-
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assertions.assertNotNull(response.getBody());
-    assertTrue(response.getBody().length > 0);
+    mockMvc
+        .perform(get(API_PATH))
+        .andExpect(status().isOk())
+        .andExpect(header().string("X-Total-Count", "1"))
+        .andExpect(jsonPath("$[0].id").value(TaskFactory.DEFAULT_TASK_ID.toString()));
   }
 
   @Test
-  public void getAllTasks_InternalError() {
-    when(taskService.getAllTasks()).thenThrow(new RuntimeException("Something failed"));
+  void getAllTasks_InternalError() throws Exception {
+    when(taskService.getAllTasks()).thenThrow(new RuntimeException("Fail"));
 
-    ResponseEntity<String> response = restTemplate.getForEntity(API_PATH, String.class);
-
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    mockMvc.perform(get(API_PATH)).andExpect(status().isInternalServerError());
   }
 
   @Test
-  public void getTaskById_Positive() {
-    Task testTask = TaskFactory.task(TaskFactory.DEFAULT_TASK_ID);
-    when(taskService.getTaskById(testTask.getId())).thenReturn(testTask);
+  void getTaskById_Positive() throws Exception {
+    TaskResponseDto response = TaskResponseDto.builder().id(TaskFactory.DEFAULT_TASK_ID).build();
+    when(taskService.getTaskById(TaskFactory.DEFAULT_TASK_ID)).thenReturn(response);
 
-    ResponseEntity<Task> response =
-        restTemplate.getForEntity(API_PATH + "/" + testTask.getId(), Task.class);
-
-    assertEquals(HttpStatus.OK, response.getStatusCode());
-    Assertions.assertNotNull(response.getBody());
-    assertEquals(testTask.getId(), response.getBody().getId());
+    mockMvc
+        .perform(get(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()));
   }
 
   @Test
-  public void getTaskById_Nonexistent() {
+  void getTaskById_Nonexistent() throws Exception {
     when(taskService.getTaskById(TaskFactory.DEFAULT_TASK_ID))
         .thenThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID));
 
-    ResponseEntity<String> response =
-        restTemplate.getForEntity(API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, String.class);
-
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    mockMvc
+        .perform(get(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID))
+        .andExpect(status().isNotFound());
   }
 
   @Test
-  public void createTask_Positive() {
+  void createTask_Positive() throws Exception {
     TaskCreateDto request = TaskFactory.taskCreateDto();
-    when(taskService.createTask(request)).thenReturn(TaskFactory.task(TaskFactory.DEFAULT_TASK_ID));
+    TaskResponseDto response = TaskResponseDto.builder().id(TaskFactory.DEFAULT_TASK_ID).build();
 
-    ResponseEntity<TaskResponseDto> response =
-        restTemplate.postForEntity(API_PATH, request, TaskResponseDto.class);
+    when(taskService.createTask(any(TaskCreateDto.class))).thenReturn(response);
 
-    assertEquals(HttpStatus.CREATED, response.getStatusCode());
-    assertNotNull(response.getHeaders().getLocation());
-    assertNotNull(response.getBody());
-    assertEquals(TaskFactory.DEFAULT_TASK_ID, response.getBody().id());
+    mockMvc
+        .perform(
+            post(API_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+        .andExpect(status().isCreated())
+        .andExpect(header().exists("Location"))
+        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()));
   }
 
   @Test
-  public void createTask_InternalError() {
-    TaskCreateDto request = TaskFactory.taskCreateDto();
-    when(taskService.createTask(request)).thenThrow(new RuntimeException("Some error"));
+  void createTask_InternalError() throws Exception {
+    when(taskService.createTask(any())).thenThrow(new RuntimeException("Error"));
 
-    ResponseEntity<String> response = restTemplate.postForEntity(API_PATH, request, String.class);
-
-    assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    mockMvc
+        .perform(
+            post(API_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TaskFactory.taskCreateDto())))
+        .andExpect(status().isInternalServerError());
   }
 
   @Test
-  public void updateTask_Positive() {
-    TaskUpdateDto request = TaskFactory.taskUpdateDto();
-    doNothing().when(taskService).updateTask(TaskFactory.DEFAULT_TASK_ID, request);
+  void updateTask_Positive() throws Exception {
+    mockMvc
+        .perform(
+            put(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TaskFactory.taskUpdateDto())))
+        .andExpect(status().isNoContent());
 
-    HttpEntity<TaskUpdateDto> entity = new HttpEntity<>(request);
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.PUT, entity, String.class);
-
-    assertEquals(HttpStatus.OK, response.getStatusCode());
+    verify(taskService).updateTask(eq(TaskFactory.DEFAULT_TASK_ID), any(TaskUpdateDto.class));
   }
 
   @Test
-  public void updateTask_Nonexistent() {
-    TaskUpdateDto request = TaskFactory.taskUpdateDto();
+  void updateTask_Nonexistent() throws Exception {
     doThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID))
         .when(taskService)
-        .updateTask(TaskFactory.DEFAULT_TASK_ID, request);
+        .updateTask(eq(TaskFactory.DEFAULT_TASK_ID), any());
 
-    HttpEntity<TaskUpdateDto> entity = new HttpEntity<>(request);
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.PUT, entity, String.class);
-
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    mockMvc
+        .perform(
+            put(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(TaskFactory.taskUpdateDto())))
+        .andExpect(status().isNotFound());
   }
 
   @Test
-  public void removeTask_Positive() {
-    doNothing().when(taskService).removeTask(TaskFactory.DEFAULT_TASK_ID);
+  void removeTask_Positive() throws Exception {
+    mockMvc
+        .perform(delete(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID))
+        .andExpect(status().isNoContent());
 
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.DELETE, null, String.class);
-
-    assertEquals(HttpStatus.OK, response.getStatusCode());
+    verify(taskService).removeTask(TaskFactory.DEFAULT_TASK_ID);
   }
 
   @Test
-  public void removeTask_Nonexistent() {
+  void removeTask_Nonexistent() throws Exception {
     doThrow(new TaskNotFoundException(TaskFactory.DEFAULT_TASK_ID))
         .when(taskService)
         .removeTask(TaskFactory.DEFAULT_TASK_ID);
 
-    ResponseEntity<String> response =
-        restTemplate.exchange(
-            API_PATH + "/" + TaskFactory.DEFAULT_TASK_ID, HttpMethod.DELETE, null, String.class);
-
-    assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    mockMvc
+        .perform(delete(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID))
+        .andExpect(status().isNotFound());
   }
 }
