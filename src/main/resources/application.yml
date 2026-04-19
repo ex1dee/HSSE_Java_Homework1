@@ -61,3 +61,7 @@ app:
       name: "viewPreference"
       default-value: "detailed"
       max-age: 604800 # 7 days
+
+  log:
+    trace-id-header: "X-Trace-Id"
+    mdc-key: "traceId"

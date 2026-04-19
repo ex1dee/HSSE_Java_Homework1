@@ -5,7 +5,13 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "app")
 public record AppProperties(
-    Client client, Security security, Info info, Cors cors, Cookie cookie, Storage storage) {
+    Client client,
+    Security security,
+    Info info,
+    Cors cors,
+    Cookie cookie,
+    Storage storage,
+    Log log) {
   public record Client(
       int connectionTimeoutSec, int readTimeoutSec, String userAgent, String baseUrl, Log log) {
     public record Log(int maxErrorSnippetLength) {}
@@ -28,4 +34,6 @@ public record AppProperties(
   public record Storage(Directories directories) {
     public record Directories(Path taskAttachments) {}
   }
+
+  public record Log(String traceIdHeader, String mdcKey) {}
 }
