@@ -2,7 +2,7 @@ package com.mipt.rezchikovsergey.sem2.spring_mvp.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseRepositoryTest;
+import com.mipt.rezchikovsergey.sem2.spring_mvp.BaseRepositoryIT;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.model.entity.Task;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.external.repository.TaskRepository;
 import com.mipt.rezchikovsergey.sem2.spring_mvp.utils.TaskFactory;
@@ -10,7 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class TaskRepositoryIT extends BaseRepositoryTest {
+public class TaskRepositoryIT extends BaseRepositoryIT {
   @Autowired private TaskRepository taskRepository;
 
   @Test
