@@ -48,13 +48,27 @@ public class TaskControllerTest extends BaseMvcTest {
 
   @Test
   void getTaskById_Positive() throws Exception {
-    TaskResponseDto response = TaskResponseDto.builder().id(TaskFactory.DEFAULT_TASK_ID).build();
+    TaskResponseDto response =
+        TaskResponseDto.builder()
+            .id(TaskFactory.DEFAULT_TASK_ID)
+            .title("Title")
+            .description("Description")
+            .build();
     when(taskService.getTaskById(TaskFactory.DEFAULT_TASK_ID)).thenReturn(response);
 
     mockMvc
         .perform(get(API_PATH + "/{id}", TaskFactory.DEFAULT_TASK_ID))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()));
+        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()))
+        .andExpect(jsonPath("$.title").value("Title"))
+        .andExpect(jsonPath("$.description").value("Description"));
+  }
+
+  @Test
+  void getTaskById_InvalidUuid() throws Exception {
+    mockMvc.perform(get(API_PATH + "/{id}", "trash")).andExpect(status().isBadRequest());
+
+    verifyNoInteractions(taskService);
   }
 
   @Test
@@ -70,7 +84,12 @@ public class TaskControllerTest extends BaseMvcTest {
   @Test
   void createTask_Positive() throws Exception {
     TaskCreateDto request = TaskFactory.taskCreateDto();
-    TaskResponseDto response = TaskResponseDto.builder().id(TaskFactory.DEFAULT_TASK_ID).build();
+    TaskResponseDto response =
+        TaskResponseDto.builder()
+            .id(TaskFactory.DEFAULT_TASK_ID)
+            .title("Title")
+            .description("Description")
+            .build();
 
     when(taskService.createTask(any(TaskCreateDto.class))).thenReturn(response);
 
@@ -81,7 +100,23 @@ public class TaskControllerTest extends BaseMvcTest {
                 .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
         .andExpect(header().exists("Location"))
-        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()));
+        .andExpect(jsonPath("$.id").value(TaskFactory.DEFAULT_TASK_ID.toString()))
+        .andExpect(jsonPath("$.title").value("Title"))
+        .andExpect(jsonPath("$.description").value("Description"));
+  }
+
+  @Test
+  void createTask_ValidationError() throws Exception {
+    TaskCreateDto invalidRequest = TaskCreateDto.builder().title("1").build();
+
+    mockMvc
+        .perform(
+            post(API_PATH)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+        .andExpect(status().isBadRequest());
+
+    verifyNoInteractions(taskService);
   }
 
   @Test
