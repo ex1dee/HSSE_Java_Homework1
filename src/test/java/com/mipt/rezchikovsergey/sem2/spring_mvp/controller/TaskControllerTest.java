@@ -66,7 +66,7 @@ public class TaskControllerTest extends BaseMvcTest {
 
   @Test
   void getTaskById_InvalidUuid() throws Exception {
-    mockMvc.perform(get(API_PATH + "/{id}", "trash")).andExpect(status().isBadRequest());
+    mockMvc.perform(get(API_PATH + "/{id}", "fake-uuid")).andExpect(status().isBadRequest());
 
     verifyNoInteractions(taskService);
   }

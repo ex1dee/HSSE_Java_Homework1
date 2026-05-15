@@ -14,6 +14,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 public abstract class BaseExceptionHandler {
@@ -32,6 +33,18 @@ public abstract class BaseExceptionHandler {
         "Validation failed",
         request,
         Map.of("errors", errors));
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  protected ProblemDetail handleMethodArgumentTypeMismatch(
+      MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+
+    return createProblemDetail(
+        HttpStatus.BAD_REQUEST,
+        "Type Mismatch",
+        "Parameter '" + exception.getName() + "' has invalid value",
+        request,
+        null);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
